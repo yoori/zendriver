@@ -5,10 +5,7 @@ import logging
 import shutil
 import types
 import typing
-from asyncio.subprocess import Process
 from typing import Callable, List, Optional, Set, Union
-
-import psutil
 
 import zendriver
 
