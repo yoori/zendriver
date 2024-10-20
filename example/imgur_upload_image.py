@@ -1,10 +1,10 @@
 try:
-    from nodriver import *
+    from zendriver import *
 except (ModuleNotFoundError, ImportError):
     import sys, os
 
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-    from nodriver import *
+    from zendriver import *
 
 from pathlib import Path
 
@@ -16,12 +16,12 @@ DELAY = 2
 
 
 try:
-    from nodriver import *
+    from zendriver import *
 except (ModuleNotFoundError, ImportError):
     import sys, os
 
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-    from nodriver import *
+    from zendriver import *
 
 
 async def main():

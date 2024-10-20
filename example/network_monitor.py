@@ -1,10 +1,10 @@
 try:
-    from nodriver import start, cdp, loop
+    from zendriver import start, cdp, loop
 except (ModuleNotFoundError, ImportError):
     import sys, os
 
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-    from nodriver import start, cdp, loop
+    from zendriver import start, cdp, loop
 
 
 async def main():

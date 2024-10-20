@@ -8,7 +8,7 @@ import subprocess
 docs = Path("docs")
 example = Path("example")
 dist = Path("dist")
-egg = Path("nodriver.egg-info")
+egg = Path("zendriver.egg-info")
 
 
 def find_file(pattern: str, root: str = ".", recursive: bool = True):

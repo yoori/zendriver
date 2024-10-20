@@ -12,12 +12,12 @@ logging.basicConfig(level=10)
 
 
 try:
-    import nodriver as uc
+    import zendriver as uc
 except (ModuleNotFoundError, ImportError):
     import sys, os
 
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-    import nodriver as uc
+    import zendriver as uc
 
 
 import time
