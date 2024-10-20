@@ -10,6 +10,7 @@ import sys
 import types
 from asyncio import iscoroutine, iscoroutinefunction
 from typing import (
+    TYPE_CHECKING,
     Any,
     Awaitable,
     Callable,
@@ -20,10 +21,12 @@ from typing import (
 
 import websockets
 
-from zendriver.core.browser import Browser
-
 from .. import cdp
 from . import util
+
+if TYPE_CHECKING:
+    from zendriver.core.browser import Browser
+
 
 T = TypeVar("T")
 
