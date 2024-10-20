@@ -547,59 +547,25 @@ class Browser:
                 else:
                     del self._i
 
-    def stop(self):
-        try:
-            # asyncio.get_running_loop().create_task(self.connection.send(cdp.browser.close()))
+    async def stop(self):
+        await self.connection.aclose()
+        logger.debug("closed the connection")
 
-            asyncio.get_event_loop().create_task(self.connection.aclose())
-            logger.debug("closed the connection using get_event_loop().create_task()")
-        except RuntimeError:
-            if self.connection:
-                try:
-                    # asyncio.run(self.connection.send(cdp.browser.close()))
-                    asyncio.run(self.connection.aclose())
-                    logger.debug("closed the connection using asyncio.run()")
-                except Exception:
-                    pass
-
-        for _ in range(3):
-            try:
-                self._process.terminate()
-                logger.info(
-                    "terminated browser with pid %d successfully" % self._process.pid
-                )
+        self._process.terminate()
+        logger.debug("gracefully stopping browser process")
+        # wait 3 seconds for the browser to stop
+        for _ in range(12):
+            if self._process.returncode is not None:
                 break
-            except (Exception,):
-                try:
-                    self._process.kill()
-                    logger.info(
-                        "killed browser with pid %d successfully" % self._process.pid
-                    )
-                    break
-                except (Exception,):
-                    try:
-                        if hasattr(self, "browser_process_pid"):
-                            os.kill(self._process_pid, 15)
-                            logger.info(
-                                "killed browser with pid %d using signal 15 successfully"
-                                % self._process.pid
-                            )
-                            break
-                    except (TypeError,):
-                        logger.info("typerror", exc_info=True)
-                        pass
-                    except (PermissionError,):
-                        logger.info(
-                            "browser already stopped, or no permission to kill. skip"
-                        )
-                        pass
-                    except (ProcessLookupError,):
-                        logger.info("process lookup failure")
-                        pass
-                    except (Exception,):
-                        raise
-            self._process = None
-            self._process_pid = None
+            await asyncio.sleep(0.25)
+        else:
+            logger.debug("browser process did not stop. killing it")
+            self._process.kill()
+            logger.debug("killed browser process")
+
+        await self._process.wait()
+        self._process = None
+        self._process_pid = None
 
     def __await__(self):
         # return ( asyncio.sleep(0)).__await__()
