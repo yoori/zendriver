@@ -1,19 +1,20 @@
 # Twitter create account
-# demo for undetected_nodriver
+# demo for zendriver
 # ultrafunkamsterdam
 
 
 import asyncio
+import logging
 import random
 import string
-import logging
 
 logging.basicConfig(level=30)
 
 try:
     import zendriver as uc
 except (ModuleNotFoundError, ImportError):
-    import sys, os
+    import os
+    import sys
 
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
     import zendriver as uc

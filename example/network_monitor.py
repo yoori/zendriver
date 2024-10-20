@@ -1,10 +1,11 @@
 try:
-    from zendriver import start, cdp, loop
+    from zendriver import cdp, loop, start
 except (ModuleNotFoundError, ImportError):
-    import sys, os
+    import os
+    import sys
 
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-    from zendriver import start, cdp, loop
+    from zendriver import cdp, loop, start
 
 
 async def main():
@@ -20,7 +21,7 @@ async def main():
     await reject_btn.click()
 
     search_inp = await tab.select("textarea")
-    await search_inp.send_keys("undetected nodriver")
+    await search_inp.send_keys("undetected zendriver")
 
     search_btn = await tab.find("google search", True)
     await search_btn.click()
@@ -33,10 +34,10 @@ async def main():
 
     search_inp = await tab.select("textarea")
 
-    for letter in "undetected nodriver":
+    for letter in "undetected zendriver":
         await search_inp.clear_input()
         await search_inp.send_keys(
-            "undetected nodriver".replace(letter, letter.upper())
+            "undetected zendriver".replace(letter, letter.upper())
         )
         await tab.wait(0.1)
 

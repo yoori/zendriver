@@ -1,9 +1,8 @@
-from pathlib import Path
 import re
-from packaging.version import Version
-
-
 import subprocess
+from pathlib import Path
+
+from packaging.version import Version
 
 docs = Path("docs")
 example = Path("example")
@@ -53,7 +52,6 @@ def remove(path):
 
 
 def change_version():
-
     current = Version(get_version(project_file))
     new_version = None
     while not new_version:
@@ -78,7 +76,7 @@ subprocess.run("make.bat html", shell=True, cwd="./docs")
 subprocess.run("make.bat markdown", shell=True, cwd="./docs")
 subprocess.run("copy docs\\_build\\markdown\\README.md .", shell=True)
 
-subprocess.run("black nodriver/core/*.py")
+subprocess.run("black zendriver/core/*.py")
 change_version()
 modified_files = list(
     m[1] for m in re.finditer("modified:\s+(.+)", subprocess.getoutput("git status"))

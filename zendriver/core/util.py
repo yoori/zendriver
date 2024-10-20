@@ -63,11 +63,11 @@ async def start(
     :type lang: str
 
     :param port: if you connect to an existing debuggable session, you can specify the port here
-                 if both host and port are provided, nodriver will not start a local chrome browser!
+                 if both host and port are provided, zendriver will not start a local chrome browser!
     :type port: int
 
     :param host: if you connect to an existing debuggable session, you can specify the host here
-                 if both host and port are provided, nodriver will not start a local chrome browser!
+                 if both host and port are provided, zendriver will not start a local chrome browser!
     :type host: str
 
     :param expert:  when set to True, enabled "expert" mode.
@@ -108,7 +108,7 @@ async def create_from_undetected_chromedriver(
     host, port = driver.options.debugger_address.split(":")
     conf.host, conf.port = host, int(port)
 
-    # create nodriver Browser instance
+    # create zendriver Browser instance
     browser = await start(conf)
 
     browser._process_pid = driver.browser_pid

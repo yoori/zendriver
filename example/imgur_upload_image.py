@@ -1,7 +1,8 @@
 try:
     from zendriver import *
 except (ModuleNotFoundError, ImportError):
-    import sys, os
+    import os
+    import sys
 
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
     from zendriver import *
@@ -18,14 +19,14 @@ DELAY = 2
 try:
     from zendriver import *
 except (ModuleNotFoundError, ImportError):
-    import sys, os
+    import os
+    import sys
 
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
     from zendriver import *
 
 
 async def main():
-
     browser = await start()
     tab = await browser.get("https://imgur.com")
 
@@ -68,7 +69,7 @@ async def main():
     # so for this one, we use the flag return_enclosing_element and set it to False
     title_field = await tab.find("give your post a unique title", best_match=True)
     print(title_field)
-    await title_field.send_keys("undetected nodriver")
+    await title_field.send_keys("undetected zendriver")
 
     grab_link = await tab.find("grab link", best_match=True)
     await grab_link.click()
