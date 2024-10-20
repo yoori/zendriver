@@ -668,7 +668,6 @@ class CookieJar:
             break
         else:
             connection = self._browser.connection
-        cookies = await connection.send(cdp.storage.get_cookies())
         await connection.send(cdp.storage.set_cookies(cookies))
 
     async def save(self, file: PathLike = ".session.dat", pattern: str = ".*"):
@@ -746,14 +745,6 @@ class CookieJar:
         save_path = pathlib.Path(file).resolve()
         cookies = pickle.load(save_path.open("r+b"))
         included_cookies = []
-        connection = None
-        for tab_ in self._browser.tabs:
-            if tab_.closed:
-                continue
-            connection = tab_
-            break
-        else:
-            connection = self._browser.connection
         for cookie in cookies:
             for match in pattern.finditer(str(cookie.__dict__)):
                 included_cookies.append(cookie)
@@ -764,7 +755,7 @@ class CookieJar:
                     cookie.value,
                 )
                 break
-        await connection.send(cdp.storage.set_cookies(included_cookies))
+        await self.set_all(included_cookies)
 
     async def clear(self):
         """
@@ -783,7 +774,6 @@ class CookieJar:
             break
         else:
             connection = self._browser.connection
-        await connection.send(cdp.storage.get_cookies())
         await connection.send(cdp.storage.clear_cookies())
 
 
