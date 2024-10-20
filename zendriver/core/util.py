@@ -5,7 +5,10 @@ import logging
 import shutil
 import types
 import typing
+from asyncio.subprocess import Process
 from typing import Callable, List, Optional, Set, Union
+
+import psutil
 
 import zendriver
 
@@ -147,7 +150,7 @@ def deconstruct_browser():
             try:
                 if _.config and not _.config.uses_custom_data_dir:
                     shutil.rmtree(_.config.user_data_dir, ignore_errors=False)
-                    print(
+                    logger.debug(
                         "successfully removed temp profile %s" % _.config.user_data_dir
                     )
             except FileNotFoundError:
