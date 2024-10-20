@@ -493,7 +493,7 @@ class Connection(metaclass=CantTouchThis):
     async def _prepare_headless(self):
         if getattr(self, "_prep_headless_done", None):
             return
-        response, error = await self._send_oneshot(
+        response = await self._send_oneshot(
             cdp.runtime.evaluate(
                 expression="navigator.userAgent",
                 user_gesture=True,
