@@ -10,9 +10,7 @@ pip install zendriver
 
 ## Usage example
 
-The aim of this project (just like undetected-chromedriver, somewhere long ago)
-is to keep it short and simple, so you can quickly open an editor or interactive session,
-type or paste a few lines and off you go.
+The aim of this project (just like undetected-chromedriver, somewhere long ago) is to keep it short and simple, so you can quickly open an editor or interactive session, type or paste a few lines and off you go.
 
 ```python
 import asyncio
