@@ -1,3 +1,7 @@
+# mkdocs
+site/
+docs/reference
+
 # uv/pyenv
 .python-version
 
