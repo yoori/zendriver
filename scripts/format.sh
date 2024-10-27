@@ -1,5 +1,5 @@
 #!/bin/sh -e
 set -x
 
-ruff check zendriver --fix
-ruff format zendriver
+uv run ruff check zendriver --fix
+uv run ruff format zendriver

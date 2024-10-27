@@ -3,6 +3,6 @@
 set -e
 set -x
 
-mypy zendriver
-ruff check zendriver
-ruff format zendriver --check
+uv run mypy zendriver
+uv run ruff check zendriver
+uv run ruff format zendriver --check

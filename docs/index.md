@@ -1,7 +1,5 @@
 # Zendriver
 
-**Documentation:** [https://slensky.com/zendriver](https://slensky.com/zendriver)
-
 Zendriver is a blazing fast, async-first, undetectable webscraping/web automation framework implemented using the Chrome Devtools Protocol.
 
 This package is a fork of the excellent [`ultrafunkamsterdam/nodriver`](https://github.com/ultrafunkamsterdam/nodriver/), created in order to compile a variety of unmerged bugfixes and increase community engagement with the project.
@@ -53,9 +51,3 @@ Zendriver aims to change this by:
 3. Opening up the issue tracker and pull requests for community contributions, allowing the project to continue to grow along with its community.
 
 With these changes in place, we hope to further development of state-of-the-art open-source web automation tools even further, helping to once again make the web truly open for all.
-
-## Getting additional help
-
-If you have a question, bug report, or want to make a general inquiry about the project, please create a new GitHub issue. If you are having a problem with Zendriver, please make sure to include your operating system, Chrome version, code example demonstrating the issue, and any other information that may be relevant.
-
-Questions directed to any personal accounts outside of GitHub will be ignored.
