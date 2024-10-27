@@ -2,37 +2,50 @@
 
 **Documentation:** [https://slensky.com/zendriver](https://slensky.com/zendriver)
 
-Zendriver is a blazing fast, async-first, undetectable webscraping/web automation framework implemented using the Chrome Devtools Protocol.
+Zendriver is a blazing fast, async-first, undetectable webscraping/web automation framework implemented using the Chrome Devtools Protocol. Visit websites, scrape content, and run JavaScript using a real browser (no Selenium/Webdriver) all with just a few lines of Python.
 
-This package is a fork of the excellent [`ultrafunkamsterdam/nodriver`](https://github.com/ultrafunkamsterdam/nodriver/), created in order to compile a variety of unmerged bugfixes and increase community engagement with the project.
-
-## Overview
-
-**No more webdriver, no more selenium.**
-
-Direct communication using the Chrome Devtools Protocol provides even better resistance against web applicatinon firewalls (WAFs), while performance gets a massive boost. This module is, contrary to [`undetected-chromedriver`](https://github.com/ultrafunkamsterdam/undetected-chromedriver), fully asynchronous.
-
-Another focus point is usability and quick prototyping, so expect a lot to work `-as is-`, with most method parameters having `best practice` defaults. Using 1 or 2 lines, this is up and running, providing best practice config by default.
-
-While usability and convenience is important. It's also easy to fully customizable everything using the entire array of [CDP](https://chromedevtools.github.io/devtools-protocol) domains, methods and events available.
+This package is a fork of the excellent [`ultrafunkamsterdam/nodriver`](https://github.com/ultrafunkamsterdam/nodriver/), created in order to compile a variety of unmerged bugfixes and increase overall community engagement with the project.
 
 ## Features
 
-- A blazing fast undetected chrome (-ish) automation library
-- No chromedriver binary or Selenium dependency
-- This equals bizarre performance increase and less detections!
-- Up and running in 1 line of code\*
-- Uses fresh profile on each run, cleans up on exit
-- Save and load cookies to file to not repeat tedious login steps
-- Smart element lookup, by selector or text, including iframe content.
-  this could also be used as wait condition for a element to appear, since it will retry
-  for the duration of <timeout> until found.
-  single element lookup by text using tab.find(), accepts a best_match flag, which will not
-  naively return the first match, but will match candidates by closest matching text length.
-- Descriptive **repr** for elements, which represent the element as html
-- Utility function to convert a running undetected_chromedriver.Chrome instance
-  to a nodriver.Browser instance and contintue from there
-- Packed with helpers and utility methods for most used and important operations
+- **Undetectable** - Zendriver uses the Chrome Devtools Protocol instead of Selenium/WebDriver, making it (almost) impossible to detect
+- **Blazing fast** - Chrome Devtools Protocol is _fast_, much faster than previous Selenium/WebDriver solutions. CDP combined with an async Python API makes Zendriver highly performant.
+- **Feature complete and easy to use** - Packed with allowing you to get up and running in just a few lines of code.
+- **Automatic cookie and profile management** - By default, uses fresh profile on each run, cleaning up on exit. Or, save and load cookies to a file to avoid repeating tedious login steps.
+- **Smart element lookup** - Find elements selector or text, including iframe content. This could also be used as wait condition for a element to appear, since it will retry for the duration of `timeout` until found. Single element lookup by text using `tab.find()` accepts a `best_match flag`, which will not naively return the first match, but will match candidates by closest matching text length.
+- **Easy debugging** - Descriptive `repr` for elements, which represents the element as HTML, makes debugging much easier.
+
+## Installation
+
+To install, simply use `pip` (or your favorite package manager):
+
+```sh
+pip install zendriver
+# or uv add zendriver, poetry add zendriver, etc.
+```
+
+## Usage
+
+Example for visiting [https://www.browserscan.net/bot-detection](https://www.browserscan.net/bot-detection) and saving a screenshot of the results:
+
+```python
+import asyncio
+
+import zendriver as zd
+
+
+async def main():
+    browser = await zd.start()
+    page = await browser.get("https://www.browserscan.net/bot-detection")
+    await page.save_screenshot("browserscan.png")
+    await browser.close()
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+Check out the [official documentation](https://slensky.com/zendriver/quickstart) for more information and examples.
 
 ## Who is this for?
 
