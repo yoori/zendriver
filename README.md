@@ -47,14 +47,6 @@ if __name__ == "__main__":
 
 Check out the [official documentation](https://slensky.com/zendriver/quickstart) for more information and examples.
 
-## Who is this for?
-
-This project is intended for individuals looking for a way to automate common tasks in their daily lives. In modern times, many websites implement stringent anti-bot measures which are in clear violation of the founding principles of the open web. These measures make it all-but impossible for regular people to programmatically interact with their favorite websites, while doing nothing against the hostile scrapers of for-profit technology companies like Amazon or OpenAI which are developed by teams of experienced engineers.
-
-Zendriver (like [`nodriver`](https://github.com/ultrafunkamsterdam/nodriver/) and [`undetected-chromedriver`](https://github.com/ultrafunkamsterdam/undetected-chromedriver) before it) is an attempt to re-democratize the web, giving normal people access to the same data and tools as these large technology companies. If you ever wanted to set up a notification bot for Facebook Marketplace or archive the content of your favorite blogger before it their website inevitably goes offline, this project is for you.
-
-On the other hand, if you are interested in DDoSing someone, automatically creating thousands of fake social media accounts, or leaving fake reviews on e-commerce sites, **you are not welcome here**. Please think carefully about whether the website you are scraping has good reason for the anti-bot measures they have implemented and do not use this tool for anything illegal or otherwise malicious.
-
 ## Rationale for the fork
 
 Zendriver remains committed to `nodriver`'s goals of staying undetected for all modern anti-bot solutions and also keeps with the batteries-included approach of its predecessor. Unfortunately, contributions to the original [`nodriver` repo](https://github.com/ultrafunkamsterdam/nodriver/) are heavily restricted, making it difficult to submit issues or pull requests. At the time of writing, there are several pull requests open to fix critical bugs which have beeen left unaddressed for many months.
