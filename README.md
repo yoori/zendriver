@@ -69,6 +69,8 @@ With these changes in place, we hope to further development of state-of-the-art 
 
 ## Getting additional help
 
-If you have a question, bug report, or want to make a general inquiry about the project, please create a new GitHub issue. If you are having a problem with Zendriver, please make sure to include your operating system, Chrome version, code example demonstrating the issue, and any other information that may be relevant.
+Please see [`CONTRIBUTING.md`](/blob/main/CONTRIBUTING.md).
+
+**TL;DR:** If you have a question, bug report, or want to make a general inquiry about the project, please create a new GitHub issue. If you are having a problem with Zendriver, please make sure to include your operating system, Chrome version, code example demonstrating the issue, and any other information that may be relevant.
 
 Questions directed to any personal accounts outside of GitHub will be ignored.
