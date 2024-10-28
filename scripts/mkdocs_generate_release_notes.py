@@ -27,6 +27,8 @@ def main() -> None:
     with RELEASE_NOTES_MD.open("w") as f:
         f.write(release_notes_md)
 
+    print("Successfully generated release notes!")
+
 
 if __name__ == "__main__":
     main()
