@@ -105,7 +105,7 @@ Enhancement suggestions are tracked as [GitHub issues](/issues).
 
 ### Your First Code Contribution
 
-First, thank you! It's fantastic that you are interested in taking the step to become a code contributor. We are welcome to almost all code contributions, but please bear in mind that if your change is out-of-scope for the project, it may not be merged. If you are unsure whether your idea is appropriate, please first create a GitHub issue (see [Suggesting Enhancements](#suggesting-enhancements)) so that we can discuss it.
+First, thank you! It's fantastic that you are interested in taking the step to become a code contributor. We welcome almost all code contributions, but please bear in mind that if your change is out-of-scope for the project, it may not be merged. If you are unsure whether your idea is appropriate, please first create a GitHub issue (see [Suggesting Enhancements](#suggesting-enhancements)) so that we can discuss it.
 
 If this is your first time making a contribution on GitHub, please review the [official documentation](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request-from-a-fork) for familiarize yourself with the pull request process.
 
