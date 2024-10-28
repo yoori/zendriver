@@ -1,6 +1,9 @@
-# mkdocs
+# mkdocs build
 site/
+
+# auto-generated docs
 docs/reference
+docs/release-notes.md
 
 # uv/pyenv
 .python-version
