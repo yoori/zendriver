@@ -67,10 +67,12 @@ Zendriver aims to change this by:
 
 With these changes in place, we hope to further development of state-of-the-art open-source web automation tools even further, helping to once again make the web truly open for all.
 
-## Getting additional help
+## Contributing
 
-Please see [`CONTRIBUTING.md`](/blob/main/CONTRIBUTING.md).
+Contributions of all types are always welcome! Please see [CONTRIBUTING.md](/blob/main/CONTRIBUTING.md) for details on how to contribute.
 
-**TL;DR:** If you have a question, bug report, or want to make a general inquiry about the project, please create a new GitHub issue. If you are having a problem with Zendriver, please make sure to include your operating system, Chrome version, code example demonstrating the issue, and any other information that may be relevant.
+### Getting additional help
+
+If you have a question, bug report, or want to make a general inquiry about the project, please create a new GitHub issue. If you are having a problem with Zendriver, please make sure to include your operating system, Chrome version, code example demonstrating the issue, and any other information that may be relevant.
 
 Questions directed to any personal accounts outside of GitHub will be ignored.
