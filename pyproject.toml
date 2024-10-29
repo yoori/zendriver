@@ -1,6 +1,6 @@
 [project]
 name = "zendriver"
-version = "0.1.0"
+version = "0.1.1"
 description = "A blazing fast, async-first, undetectable webscraping/web automation framework"
 readme = "README.md"
 authors = [
@@ -13,10 +13,12 @@ classifiers = [
     "Topic :: Internet :: WWW/HTTP :: Browsers",
     "License :: OSI Approved :: GNU Affero General Public License v3",
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 dependencies = [
     "deprecated>=1.2.14",
     "mss>=9.0.2",

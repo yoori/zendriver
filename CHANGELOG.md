@@ -15,6 +15,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+## [0.1.1] - 2024-10-29
+
+### Added
+
+- Support for Python 3.10 and Python 3.11. All versions >=3.10 are now supported.
+
 ## [0.1.0] - 2024-10-20
 
 Initial version, forked from [ultrafunkamsterdam/nodriver@`1bb6003`](https://github.com/ultrafunkamsterdam/nodriver/commit/1bb6003c7f0db4d3ec05fdf3fc8c8e0804260103) with a variety of improvements.

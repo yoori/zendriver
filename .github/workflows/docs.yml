@@ -5,6 +5,10 @@ on:
       - main
     paths:
       - "docs/**"
+      # Files which are used during doc generation
+      - "CHANGELOG.md"
+      - "zendriver/cdp/**"
+    workflow_dispatch:
 permissions:
   contents: write
 jobs:
