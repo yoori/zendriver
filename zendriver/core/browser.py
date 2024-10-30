@@ -6,7 +6,6 @@ import http
 import http.cookiejar
 import json
 import logging
-import os
 import pathlib
 import pickle
 import urllib.parse
