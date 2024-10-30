@@ -3,6 +3,9 @@
 set -e
 set -x
 
-uv run mypy zendriver
+echo "Running ruff check..."
 uv run ruff check zendriver
+echo "Running ruff format check..."
 uv run ruff format zendriver --check
+echo "Running mypy..."
+uv run mypy zendriver
