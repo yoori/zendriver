@@ -10,7 +10,7 @@ from typing import List, Optional, Tuple, Union
 import zendriver_flare_bypasser.core.browser
 
 from .. import cdp
-from . import element, util
+from . import element, util, Keyboard, Mouse, Touchscreen
 from .config import PathLike
 from .connection import Connection, ProtocolException
 
@@ -130,9 +130,9 @@ class Tab(Connection):
         self.browser = browser
         self._dom = None
         self._window_id = None
-        self.keyboard = self.Keyboard(self)
-        self.touchscreen = self.Touchscreen(self)
-        self.mouse = self.Mouse(self)
+        self.keyboard = Keyboard(self)
+        self.touchscreen = Touchscreen(self)
+        self.mouse = Mouse(self)
 
     @property
     def inspector_url(self):
