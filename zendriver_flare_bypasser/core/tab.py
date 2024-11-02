@@ -130,6 +130,9 @@ class Tab(Connection):
         self.browser = browser
         self._dom = None
         self._window_id = None
+        self.keyboard = self.Keyboard(self)
+        self.touchscreen = self.Touchscreen(self)
+        self.mouse = self.Mouse(self)
 
     @property
     def inspector_url(self):
