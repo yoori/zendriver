@@ -19,15 +19,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Pinned requirement `websockets<14`, fixing the `AttributeError: 'NoneType' object has no attribute 'closed'` crash which occurs on the latest version of `websockets`.
-- Fixed incorrect `browser.close()` method in examples and documentation -- the correct method is `browser.stop()`.
-- Fixed `atexit` handler to correctly handle async `browser.stop()` method.
+- Pinned requirement `websockets<14`, fixing the `AttributeError: 'NoneType' object has no attribute 'closed'` crash which occurs on the latest version of `websockets`. @stephanlensky
+- Fixed incorrect `browser.close()` method in examples and documentation -- the correct method is `browser.stop()`. @stephanlensky
+- Fixed `atexit` handler to correctly handle async `browser.stop()` method. @stephanlensky
 
 ## [0.1.1] - 2024-10-29
 
 ### Added
 
-- Support for Python 3.10 and Python 3.11. All versions >=3.10 are now supported.
+- Support for Python 3.10 and Python 3.11. All versions >=3.10 are now supported. @stephanlensky
 
 ## [0.1.0] - 2024-10-20
 
