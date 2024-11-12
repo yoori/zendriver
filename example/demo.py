@@ -127,7 +127,7 @@ async def main():
         except:
             pass
     print("TBCI=", driver.connection.listener.time_before_considered_idle)
-    driver.stop()
+    await driver.stop()
 
 
 async def scroll_task(tab):

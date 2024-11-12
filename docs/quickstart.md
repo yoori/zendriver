@@ -22,7 +22,7 @@ async def main():
 
     # ...further code...
 
-    await browser.close()
+    await browser.stop()
 
 
 if __name__ == '__main__':
@@ -164,7 +164,7 @@ async def main():
     my_link = input_thing.attrs.value
 
     print(my_link)
-    await browser.close()
+    await browser.stop()
 
 
 if __name__ == "__main__":

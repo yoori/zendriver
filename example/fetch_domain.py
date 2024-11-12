@@ -39,7 +39,7 @@ async def main():
         await tab.activate()
         await tab.close()
 
-    browser.stop()
+    await browser.stop()
 
 
 browser = loop().run_until_complete(main())
