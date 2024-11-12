@@ -860,7 +860,7 @@ requires-dist = [
     { name = "asyncio-atexit", specifier = ">=1.0.1" },
     { name = "deprecated", specifier = ">=1.2.14" },
     { name = "mss", specifier = ">=9.0.2" },
-    { name = "websockets", specifier = ">=13.1" },
+    { name = "websockets", specifier = ">=13.1,<14" },
 ]
 
 [package.metadata.requires-dev]
