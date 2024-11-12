@@ -1,18 +1,20 @@
 from __future__ import annotations
 
 import asyncio
-import atexit
 import http
 import http.cookiejar
 import json
 import logging
 import pathlib
 import pickle
+import shutil
 import urllib.parse
 import urllib.request
 import warnings
 from collections import defaultdict
 from typing import List, Tuple, Union
+
+import asyncio_atexit
 
 from .. import cdp
 from . import tab, util
@@ -88,6 +90,14 @@ class Browser:
             )
         instance = cls(config)
         await instance.start()
+
+        async def browser_atexit() -> None:
+            if not instance.stopped:
+                await instance.stop()
+            await instance._cleanup_temporary_profile()
+
+        asyncio_atexit.register(browser_atexit)
+
         return instance
 
     def __init__(self, config: Config, **kwargs):
@@ -266,7 +276,7 @@ class Browser:
         await connection.sleep(0.25)
         return connection
 
-    async def start(self=None) -> Browser:
+    async def start(self) -> Browser:
         """launches the actual browser"""
         if not self:
             warnings.warn("use ``await Browser.create()`` to create a new instance")
@@ -566,6 +576,28 @@ class Browser:
         self._process = None
         self._process_pid = None
 
+    async def _cleanup_temporary_profile(self) -> None:
+        if not self.config or self.config.uses_custom_data_dir:
+            return
+
+        for attempt in range(5):
+            try:
+                shutil.rmtree(self.config.user_data_dir, ignore_errors=False)
+                logger.debug(
+                    "successfully removed temp profile %s" % self.config.user_data_dir
+                )
+            except FileNotFoundError:
+                break
+            except (PermissionError, OSError) as e:
+                if attempt == 4:
+                    logger.debug(
+                        "problem removing data dir %s\nConsider checking whether it's there and remove it by hand\nerror: %s",
+                        self.config.user_data_dir,
+                        e,
+                    )
+                await asyncio.sleep(0.15)
+                continue
+
     def __await__(self):
         # return ( asyncio.sleep(0)).__await__()
         return self.update_targets().__await__()
@@ -771,6 +803,3 @@ class HTTPApi:
             None, lambda: urllib.request.urlopen(request, timeout=10)
         )
         return json.loads(response.read())
-
-
-atexit.register(util.deconstruct_browser)

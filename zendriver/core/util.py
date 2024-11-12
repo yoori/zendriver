@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import asyncio
 import logging
-import shutil
 import types
 import typing
 from typing import Callable, List, Optional, Set, Union
@@ -135,33 +134,6 @@ def free_port() -> int:
     port: int = free_socket.getsockname()[1]
     free_socket.close()
     return port
-
-
-def deconstruct_browser():
-    import time
-
-    for _ in __registered__instances__:
-        if not _.stopped:
-            _.stop()
-        for attempt in range(5):
-            try:
-                if _.config and not _.config.uses_custom_data_dir:
-                    shutil.rmtree(_.config.user_data_dir, ignore_errors=False)
-                    logger.debug(
-                        "successfully removed temp profile %s" % _.config.user_data_dir
-                    )
-            except FileNotFoundError:
-                break
-            except (PermissionError, OSError) as e:
-                if attempt == 4:
-                    logger.debug(
-                        "problem removing data dir %s\nConsider checking whether it's there and remove it by hand\nerror: %s",
-                        _.config.user_data_dir,
-                        e,
-                    )
-                    break
-                time.sleep(0.15)
-                continue
 
 
 def filter_recurse_all(
