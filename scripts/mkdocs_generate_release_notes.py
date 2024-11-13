@@ -1,4 +1,8 @@
 #!/usr/bin/env -S uv run
+"""
+Generate release notes from CHANGELOG.md and write them to docs/release-notes.md.
+"""
+
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).parent.parent
