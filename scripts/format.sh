@@ -3,5 +3,7 @@
 set -e
 set -x
 
-uv run ruff check zendriver --fix
-uv run ruff format zendriver
+python_files=(zendriver scripts)
+
+uv run ruff check "${python_files[@]}" --fix
+uv run ruff format "${python_files[@]}"
