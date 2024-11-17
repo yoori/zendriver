@@ -602,13 +602,15 @@ class Listener:
                 # breathe
                 # await asyncio.sleep(self.time_before_considered_idle / 10)
                 continue
-            except (Exception,) as e:
-                # break on any other exception
-                # which is mostly socket is closed or does not exist
-                # or is not allowed
-
+            except (websockets.exceptions.ConnectionClosedError,) as e:
                 logger.debug(
                     "connection listener exception while reading websocket:\n%s", e
+                )
+                break
+            except (Exception,) as e:
+                # we don't expect here other exceptions, need to debug if it will appear.
+                logger.exception(
+                    "connection listener exception while reading websocket"
                 )
                 break
 
