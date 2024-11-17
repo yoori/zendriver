@@ -201,7 +201,7 @@ class Connection(metaclass=CantTouchThis):
     ):
         super().__init__()
         self._target = target
-        self.__count__ = itertools.count(0)
+        self._cdp_id_generator = itertools.count(0)
         self._owner = _owner
         self.websocket_url: str = websocket_url
         self.websocket = None
@@ -426,9 +426,7 @@ class Connection(metaclass=CantTouchThis):
         try:
             tx = Transaction(cdp_obj)
             tx.connection = self
-            if not self.mapper:
-                self.__count__ = itertools.count(0)
-            tx.id = next(self.__count__)
+            tx.id = next(self._cdp_id_generator)
             self.mapper.update({tx.id: tx})
             if not _is_update:
                 await self._register_handlers()
@@ -647,9 +645,7 @@ class Listener:
                 try:
                     event = cdp.util.parse_json_event(message)
                     event_tx = EventTransaction(event)
-                    if not self.connection.mapper:
-                        self.connection.__count__ = itertools.count(0)
-                    event_tx.id = next(self.connection.__count__)
+                    event_tx.id = next(self.connection._cdp_id_generator)
                     self.connection.mapper[event_tx.id] = event_tx
                 except Exception as e:
                     logger.info(
