@@ -9,13 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Reverted non-functional fixes for mypy linting errors (oops) @stephanlensky
-
 ### Added
 
 ### Changed
 
 ### Removed
+
+## [0.1.5] - 2024-11-17
+
+### Fixed
+
+- Reverted non-functional fixes for mypy linting errors (oops) @stephanlensky
 
 ## [0.1.4] - 2024-11-17
 
