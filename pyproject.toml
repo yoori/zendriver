@@ -36,6 +36,7 @@ dev-dependencies = [
     "pyyaml>=6.0.2",
     "ruff>=0.7.0",
     "types-pyyaml>=6.0.12.20240917",
+    "types-requests>=2.32.0.20241016",
 ]
 
 [tool.ruff]
@@ -43,3 +44,10 @@ exclude = ["zendriver/cdp"]
 
 [tool.mypy]
 exclude = "zendriver/cdp"
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = [
+    "asyncio_atexit",
+]
+ignore_missing_imports = true
