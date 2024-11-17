@@ -111,14 +111,19 @@ def get_new_version(current_version: str, patch: bool, minor: bool, major: bool)
 
 
 def write_new_version_to_pyproject(new_version: str, dryrun: bool) -> None:
+    content = PYPROJECT_TOML.read_text()
+    new_content = re.sub(
+        PYPROJECT_VERSION_REGEX,
+        f'version = "{new_version}"',
+        content,
+        flags=re.MULTILINE,
+    )
+    assert content != new_content, "No changes made to pyproject.toml"
+
     if dryrun:
         print(f"Would update {PYPROJECT_TOML} with new version: {new_version}")
         return
-
-    content = PYPROJECT_TOML.read_text()
-    PYPROJECT_TOML.write_text(
-        re.sub(PYPROJECT_VERSION_REGEX, f'version = "{new_version}"', content)
-    )
+    PYPROJECT_TOML.write_text(new_content)
 
 
 def write_new_version_to_version_py(new_version: str, dryrun: bool) -> None:
@@ -257,6 +262,7 @@ def main() -> None:
 
     # create and push the new release
     write_new_version_to_pyproject(new_version, args.dryrun)
+    write_new_version_to_version_py(new_version, args.dryrun)
     changelog = write_changelog(new_version, args.dryrun)
 
     show_diff()
