@@ -4,7 +4,7 @@
 
 Zendriver is a blazing fast, async-first, undetectable webscraping/web automation framework implemented using the Chrome Devtools Protocol. Visit websites, scrape content, and run JavaScript using a real browser (no Selenium/Webdriver) all with just a few lines of Python.
 
-**Docker support is here!** Check out [stephanlensky/zendriver-docker](https://github.com/stephanlensky/zendriver-docker) for an example of how to run Zendriver with a real, GPU-accelerated browser (not headless) in a Docker container.
+**Docker support is here!** Check out [stephanlensky/zendriver-docker](https://github.com/stephanlensky/zendriver-docker) for an example of how to run Zendriver with a real, GPU-accelerated browser (not headless) in a Docker container. (Linux-only)
 
 This package is a fork of the excellent [`ultrafunkamsterdam/nodriver`](https://github.com/ultrafunkamsterdam/nodriver/), created in order to compile a variety of unmerged bugfixes and increase overall community engagement with the project.
 
