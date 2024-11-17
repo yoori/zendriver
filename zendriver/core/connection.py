@@ -8,8 +8,7 @@ import json
 import logging
 import sys
 import types
-import typing
-from asyncio import iscoroutinefunction
+from asyncio import iscoroutine, iscoroutinefunction
 from typing import (
     TYPE_CHECKING,
     Any,
@@ -76,14 +75,20 @@ class SettingClassVarNotAllowedException(PermissionError):
 
 
 class Transaction(asyncio.Future):
-    def __init__(self, cdp_obj: Generator[dict[str, Any], dict[str, Any], Any]):
+    __cdp_obj__: Generator = None
+
+    method: str = None
+    params: dict = None
+
+    id: int = None
+
+    def __init__(self, cdp_obj: Generator):
         """
         :param cdp_obj:
         """
         super().__init__()
         self.__cdp_obj__ = cdp_obj
-        self.connection: Connection | None = None
-        self.id: int | None = None
+        self.connection = None
 
         self.method, *params = next(self.__cdp_obj__).values()
         if params:
@@ -92,7 +97,7 @@ class Transaction(asyncio.Future):
 
     @property
     def message(self):
-        return json.dumps({"method": self.method, "params": self.params})
+        return json.dumps({"method": self.method, "params": self.params, "id": self.id})
 
     @property
     def has_exception(self):
@@ -144,7 +149,7 @@ class EventTransaction(Transaction):
 
     def __init__(self, event_object):
         try:
-            super().__init__(None)  # type: ignore
+            super().__init__(None)
         except Exception:
             pass
         self.set_result(event_object)
@@ -183,15 +188,15 @@ class CantTouchThis(type):
 
 
 class Connection(metaclass=CantTouchThis):
-    attached: bool
-    websocket: websockets.WebSocketClientProtocol | None
-    _target: cdp.target.TargetInfo | None
+    attached: bool = None
+    websocket: websockets.WebSocketClientProtocol
+    _target: cdp.target.TargetInfo
 
     def __init__(
         self,
         websocket_url: str,
-        target: cdp.target.TargetInfo | None = None,
-        _owner: Browser | None = None,
+        target: cdp.target.TargetInfo = None,
+        _owner: Browser = None,
         **kwargs,
     ):
         super().__init__()
@@ -200,18 +205,16 @@ class Connection(metaclass=CantTouchThis):
         self._owner = _owner
         self.websocket_url: str = websocket_url
         self.websocket = None
-        self.mapper: dict[int, Transaction] = {}
-        self.handlers: dict[Any, list[Union[Callable, Awaitable]]] = (
-            collections.defaultdict(list)
-        )
+        self.mapper = {}
+        self.handlers = collections.defaultdict(list)
         self.recv_task = None
-        self.enabled_domains: list[Any] = []
-        self._last_result: list[Any] = []
-        self.listener: Listener | None = None
+        self.enabled_domains = []
+        self._last_result = []
+        self.listener: Listener = None
         self.__dict__.update(**kwargs)
 
     @property
-    def target(self) -> cdp.target.TargetInfo | None:
+    def target(self) -> cdp.target.TargetInfo:
         return self._target
 
     @target.setter
@@ -332,7 +335,7 @@ class Connection(metaclass=CantTouchThis):
         """
         asyncio.ensure_future(self.send(cdp_obj))
 
-    async def wait(self, t: int | float | None = None):
+    async def wait(self, t: Union[int, float] = None):
         """
         waits until the event listener reports idle (no new events received in certain timespan).
         when `t` is provided, ensures waiting for `t` seconds, no matter what.
@@ -342,9 +345,6 @@ class Connection(metaclass=CantTouchThis):
         :return:
         :rtype:
         """
-        if not self.listener:
-            raise ValueError("No listener created yet")
-
         await self.update_target()
         loop = asyncio.get_running_loop()
         start_time = loop.time()
@@ -435,7 +435,6 @@ class Connection(metaclass=CantTouchThis):
             try:
                 return await tx
             except ProtocolException as e:
-                e.message = e.message or ""
                 e.message += f"\ncommand:{tx.method}\nparams:{tx.params}"
                 raise e
         except Exception:
@@ -455,13 +454,12 @@ class Connection(metaclass=CantTouchThis):
         # are not represented by handlers, and can be removed
         enabled_domains = self.enabled_domains.copy()
         for event_type in self.handlers.copy():
+            domain_mod = None
             if len(self.handlers[event_type]) == 0:
                 self.handlers.pop(event_type)
                 continue
-            if not isinstance(event_type, type):
-                continue
-
-            domain_mod = util.cdp_get_module(event_type.__module__)
+            if isinstance(event_type, type):
+                domain_mod = util.cdp_get_module(event_type.__module__)
             if domain_mod in self.enabled_domains:
                 # at this point, the domain is being used by a handler
                 # so remove that domain from temp variable 'enabled_domains' if present
@@ -535,9 +533,6 @@ class Connection(metaclass=CantTouchThis):
         setattr(self, "_prep_expert_done", True)
 
     async def _send_oneshot(self, cdp_obj):
-        if not self.websocket or self.closed:
-            raise ConnectionError("Websocket is closed")
-
         tx = Transaction(cdp_obj)
         tx.connection = self
         tx.id = -2
@@ -553,9 +548,9 @@ class Connection(metaclass=CantTouchThis):
 class Listener:
     def __init__(self, connection: Connection):
         self.connection = connection
-        self.history: collections.deque = collections.deque()
+        self.history = collections.deque()
         self.max_history = 1000
-        self.task: asyncio.Future | None = None
+        self.task: asyncio.Future = None
 
         # when in interactive mode, the loop is paused after each return
         # and when the next call is made, it might still have to process some events
@@ -600,9 +595,6 @@ class Listener:
     async def listener_loop(self):
         while True:
             try:
-                if not self.connection.websocket or self.connection.websocket.closed:
-                    raise ConnectionError("Websocket is closed")
-
                 msg = await asyncio.wait_for(
                     self.connection.websocket.recv(), self.time_before_considered_idle
                 )
@@ -645,9 +637,9 @@ class Listener:
                     tx(**message)
                 else:
                     if message["id"] == -2:
-                        maybe_tx = self.connection.mapper.get(-2)
-                        if maybe_tx:
-                            maybe_tx(**message)
+                        tx = self.connection.mapper.get(-2)
+                        if tx:
+                            tx(**message)
                         continue
             else:
                 # probably an event
@@ -677,13 +669,12 @@ class Listener:
                         continue
                     for callback in callbacks:
                         try:
-                            if iscoroutinefunction(callback):
+                            if iscoroutinefunction(callback) or iscoroutine(callback):
                                 try:
                                     await callback(event, self.connection)
                                 except TypeError:
                                     await callback(event)
                             else:
-                                callback = typing.cast(Callable, callback)
                                 try:
                                     callback(event, self.connection)
                                 except TypeError:
