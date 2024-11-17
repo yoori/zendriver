@@ -1,8 +1,8 @@
 # Zendriver ✌️
 
-**Documentation:** [https://slensky.com/zendriver](https://slensky.com/zendriver)
-
 > This package is a fork of the [`ultrafunkamsterdam/nodriver`](https://github.com/ultrafunkamsterdam/nodriver/), created to add new features, compile unmerged bugfixes, increase community engagement.
+
+**Documentation:** [https://slensky.com/zendriver](https://slensky.com/zendriver)
 
 Zendriver is a blazing fast, async-first, undetectable webscraping/web automation framework implemented using the Chrome Devtools Protocol. Visit websites, scrape content, and run JavaScript using a real browser (no Selenium/Webdriver) all with just a few lines of Python.
 
