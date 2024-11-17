@@ -12,7 +12,7 @@ Intended for use by maintainers only.
 This script will:
 - Read pyproject.toml to automatically determine the new version number
 - Update pyproject.toml with the new version number
-- Update zendriver/_version.py with the new version numbers
+- Update zendriver/_version.py with the new version number
 - Update CHANGELOG.md, creating a new section for the release and moving unreleased changes there
 - Commit and push changes to pyproject.toml and CHANGELOG.md
 - Create and push a git tag for the new version
