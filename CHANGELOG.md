@@ -9,15 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+### Added
+
+### Changed
+
+### Removed
+
+## [0.1.4] - 2024-11-17
+
+### Fixed
+
 - Fixed a large number of mypy linting errors (should not result in any functional change) @stephanlensky
 
 ### Added
 
 - Added `zendriver.__version__` attribute to get current package version at runtime @stephanlensky
-
-### Changed
-
-### Removed
 
 ## [0.1.3] - 2024-11-12
 
