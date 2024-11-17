@@ -181,7 +181,9 @@ def commit_and_push_changes(new_version: str, dryrun: bool) -> None:
         print("Would commit and push changes to the repository")
         return
 
-    subprocess.run(["git", "add", "pyproject.toml", "CHANGELOG.md"])
+    subprocess.run(
+        ["git", "add", "pyproject.toml", "CHANGELOG.md", "zendriver/_version.py"]
+    )
     subprocess.run(["git", "commit", "-m", f"Bump version to {new_version}"])
     subprocess.run(["git", "push"])
 
