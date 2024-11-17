@@ -14,7 +14,7 @@ This script will:
 - Update pyproject.toml with the new version number
 - Update zendriver/_version.py with the new version number
 - Update CHANGELOG.md, creating a new section for the release and moving unreleased changes there
-- Commit and push changes to pyproject.toml, CHANGELOG.md, and zendriver/_version.py
+- Commit and push changes to pyproject.toml, zendriver/_version.py, and CHANGELOG.md
 - Create and push a git tag for the new version
 - Create a new release on GitHub ($GITHUB_TOKEN environment variable must be set)
 
