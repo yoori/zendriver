@@ -6,6 +6,7 @@ To install, simply use `pip` (or your favorite package manager):
 
 ```sh
 pip install zendriver
+# or uv add zendriver, poetry add zendriver, etc.
 ```
 
 ## Usage example

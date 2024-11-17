@@ -2,6 +2,8 @@
 
 Zendriver is a blazing fast, async-first, undetectable webscraping/web automation framework implemented using the Chrome Devtools Protocol. Visit websites, scrape content, and run JavaScript using a real browser (no Selenium/Webdriver) all with just a few lines of Python.
 
+**Docker support is here!** Check out [stephanlensky/zendriver-docker](https://github.com/stephanlensky/zendriver-docker) for an example of how to run Zendriver with a real, GPU-accelerated browser (not headless) in a Docker container.
+
 This package is a fork of the excellent [`ultrafunkamsterdam/nodriver`](https://github.com/ultrafunkamsterdam/nodriver/), created in order to compile a variety of unmerged bugfixes and increase overall community engagement with the project.
 
 ## Features
@@ -9,6 +11,7 @@ This package is a fork of the excellent [`ultrafunkamsterdam/nodriver`](https://
 - **Undetectable** - Zendriver uses the Chrome Devtools Protocol instead of Selenium/WebDriver, making it (almost) impossible to detect
 - **Blazing fast** - Chrome Devtools Protocol is _fast_, much faster than previous Selenium/WebDriver solutions. CDP combined with an async Python API makes Zendriver highly performant.
 - **Feature complete and easy to use** - Packed with allowing you to get up and running in just a few lines of code.
+- **First-class Docker support** - Traditionally, browser automation has been incredibly difficult to package with Docker, especially if you want to run real, GPU-accelerated Chrome (not headless). Now, deploying with Docker is easier than ever using the officially supported [zendriver-docker project template](https://github.com/stephanlensky/zendriver-docker).
 - **Automatic cookie and profile management** - By default, uses fresh profile on each run, cleaning up on exit. Or, save and load cookies to a file to avoid repeating tedious login steps.
 - **Smart element lookup** - Find elements selector or text, including iframe content. This could also be used as wait condition for a element to appear, since it will retry for the duration of `timeout` until found. Single element lookup by text using `tab.find()` accepts a `best_match flag`, which will not naively return the first match, but will match candidates by closest matching text length.
 - **Easy debugging** - Descriptive `repr` for elements, which represents the element as HTML makes debugging much easier.
