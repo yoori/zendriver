@@ -12,6 +12,7 @@ Intended for use by maintainers only.
 This script will:
 - Read pyproject.toml to automatically determine the new version number
 - Update pyproject.toml with the new version number
+- Update zendriver/_version.py with the new version numbers
 - Update CHANGELOG.md, creating a new section for the release and moving unreleased changes there
 - Commit and push changes to pyproject.toml and CHANGELOG.md
 - Create and push a git tag for the new version
@@ -37,6 +38,8 @@ GITHUB_REPO_SLUG = "stephanlensky/zendriver"
 
 PYPROJECT_TOML = Path("pyproject.toml")
 PYPROJECT_VERSION_REGEX = r"^version = \"(?P<version>\d+\.\d+\.\d+)\"$"
+
+VERSION_PY = Path("zendriver/_version.py")
 
 CHANGELOG_MD = Path("CHANGELOG.md")
 CHANGELOG_MD_UNRELEASED_REGEX = (
@@ -109,13 +112,21 @@ def get_new_version(current_version: str, patch: bool, minor: bool, major: bool)
 
 def write_new_version_to_pyproject(new_version: str, dryrun: bool) -> None:
     if dryrun:
-        print(f"Would update pyproject.toml with new version: {new_version}")
+        print(f"Would update {PYPROJECT_TOML} with new version: {new_version}")
         return
 
     content = PYPROJECT_TOML.read_text()
     PYPROJECT_TOML.write_text(
         re.sub(PYPROJECT_VERSION_REGEX, f'version = "{new_version}"', content)
     )
+
+
+def write_new_version_to_version_py(new_version: str, dryrun: bool) -> None:
+    if dryrun:
+        print(f"Would update {VERSION_PY} with new version: {new_version}")
+        return
+
+    VERSION_PY.write_text(f'__version__ = "{new_version}"\n')
 
 
 def write_changelog(new_version: str, dryrun: bool) -> str:

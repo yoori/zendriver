@@ -1,4 +1,5 @@
 from zendriver import cdp
+from zendriver._version import __version__
 from zendriver.core import util
 from zendriver.core._contradict import (
     ContraDict,  # noqa
@@ -12,6 +13,7 @@ from zendriver.core.tab import Tab
 from zendriver.core.util import loop, start
 
 __all__ = [
+    "__version__",
     "loop",
     "Browser",
     "Tab",
