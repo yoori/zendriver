@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Updated CDP models @stephanlensky
+
 ### Removed
 
 ## [0.1.5] - 2024-11-17
