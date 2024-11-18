@@ -9,7 +9,7 @@ from __future__ import annotations
 import enum
 import typing
 from dataclasses import dataclass
-from .util import T_JSON_DICT
+from .util import event_class, T_JSON_DICT
 
 from . import dom
 from . import runtime
@@ -112,21 +112,15 @@ class EventListener:
             script_id=runtime.ScriptId.from_json(json["scriptId"]),
             line_number=int(json["lineNumber"]),
             column_number=int(json["columnNumber"]),
-            handler=(
-                runtime.RemoteObject.from_json(json["handler"])
-                if json.get("handler", None) is not None
-                else None
-            ),
-            original_handler=(
-                runtime.RemoteObject.from_json(json["originalHandler"])
-                if json.get("originalHandler", None) is not None
-                else None
-            ),
-            backend_node_id=(
-                dom.BackendNodeId.from_json(json["backendNodeId"])
-                if json.get("backendNodeId", None) is not None
-                else None
-            ),
+            handler=runtime.RemoteObject.from_json(json["handler"])
+            if json.get("handler", None) is not None
+            else None,
+            original_handler=runtime.RemoteObject.from_json(json["originalHandler"])
+            if json.get("originalHandler", None) is not None
+            else None,
+            backend_node_id=dom.BackendNodeId.from_json(json["backendNodeId"])
+            if json.get("backendNodeId", None) is not None
+            else None,
         )
 
 

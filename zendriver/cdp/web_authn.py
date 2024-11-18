@@ -149,59 +149,39 @@ class VirtualAuthenticatorOptions:
         return cls(
             protocol=AuthenticatorProtocol.from_json(json["protocol"]),
             transport=AuthenticatorTransport.from_json(json["transport"]),
-            ctap2_version=(
-                Ctap2Version.from_json(json["ctap2Version"])
-                if json.get("ctap2Version", None) is not None
-                else None
-            ),
-            has_resident_key=(
-                bool(json["hasResidentKey"])
-                if json.get("hasResidentKey", None) is not None
-                else None
-            ),
-            has_user_verification=(
-                bool(json["hasUserVerification"])
-                if json.get("hasUserVerification", None) is not None
-                else None
-            ),
-            has_large_blob=(
-                bool(json["hasLargeBlob"])
-                if json.get("hasLargeBlob", None) is not None
-                else None
-            ),
-            has_cred_blob=(
-                bool(json["hasCredBlob"])
-                if json.get("hasCredBlob", None) is not None
-                else None
-            ),
-            has_min_pin_length=(
-                bool(json["hasMinPinLength"])
-                if json.get("hasMinPinLength", None) is not None
-                else None
-            ),
-            has_prf=(
-                bool(json["hasPrf"]) if json.get("hasPrf", None) is not None else None
-            ),
-            automatic_presence_simulation=(
-                bool(json["automaticPresenceSimulation"])
-                if json.get("automaticPresenceSimulation", None) is not None
-                else None
-            ),
-            is_user_verified=(
-                bool(json["isUserVerified"])
-                if json.get("isUserVerified", None) is not None
-                else None
-            ),
-            default_backup_eligibility=(
-                bool(json["defaultBackupEligibility"])
-                if json.get("defaultBackupEligibility", None) is not None
-                else None
-            ),
-            default_backup_state=(
-                bool(json["defaultBackupState"])
-                if json.get("defaultBackupState", None) is not None
-                else None
-            ),
+            ctap2_version=Ctap2Version.from_json(json["ctap2Version"])
+            if json.get("ctap2Version", None) is not None
+            else None,
+            has_resident_key=bool(json["hasResidentKey"])
+            if json.get("hasResidentKey", None) is not None
+            else None,
+            has_user_verification=bool(json["hasUserVerification"])
+            if json.get("hasUserVerification", None) is not None
+            else None,
+            has_large_blob=bool(json["hasLargeBlob"])
+            if json.get("hasLargeBlob", None) is not None
+            else None,
+            has_cred_blob=bool(json["hasCredBlob"])
+            if json.get("hasCredBlob", None) is not None
+            else None,
+            has_min_pin_length=bool(json["hasMinPinLength"])
+            if json.get("hasMinPinLength", None) is not None
+            else None,
+            has_prf=bool(json["hasPrf"])
+            if json.get("hasPrf", None) is not None
+            else None,
+            automatic_presence_simulation=bool(json["automaticPresenceSimulation"])
+            if json.get("automaticPresenceSimulation", None) is not None
+            else None,
+            is_user_verified=bool(json["isUserVerified"])
+            if json.get("isUserVerified", None) is not None
+            else None,
+            default_backup_eligibility=bool(json["defaultBackupEligibility"])
+            if json.get("defaultBackupEligibility", None) is not None
+            else None,
+            default_backup_state=bool(json["defaultBackupState"])
+            if json.get("defaultBackupState", None) is not None
+            else None,
         )
 
 
@@ -241,6 +221,15 @@ class Credential:
     #: defaultBackupState value.
     backup_state: typing.Optional[bool] = None
 
+    #: The credential's user.name property. Equivalent to empty if not set.
+    #: https://w3c.github.io/webauthn/#dom-publickeycredentialentity-name
+    user_name: typing.Optional[str] = None
+
+    #: The credential's user.displayName property. Equivalent to empty if
+    #: not set.
+    #: https://w3c.github.io/webauthn/#dom-publickeycredentialuserentity-displayname
+    user_display_name: typing.Optional[str] = None
+
     def to_json(self) -> T_JSON_DICT:
         json: T_JSON_DICT = dict()
         json["credentialId"] = self.credential_id
@@ -257,6 +246,10 @@ class Credential:
             json["backupEligibility"] = self.backup_eligibility
         if self.backup_state is not None:
             json["backupState"] = self.backup_state
+        if self.user_name is not None:
+            json["userName"] = self.user_name
+        if self.user_display_name is not None:
+            json["userDisplayName"] = self.user_display_name
         return json
 
     @classmethod
@@ -267,26 +260,24 @@ class Credential:
             private_key=str(json["privateKey"]),
             sign_count=int(json["signCount"]),
             rp_id=str(json["rpId"]) if json.get("rpId", None) is not None else None,
-            user_handle=(
-                str(json["userHandle"])
-                if json.get("userHandle", None) is not None
-                else None
-            ),
-            large_blob=(
-                str(json["largeBlob"])
-                if json.get("largeBlob", None) is not None
-                else None
-            ),
-            backup_eligibility=(
-                bool(json["backupEligibility"])
-                if json.get("backupEligibility", None) is not None
-                else None
-            ),
-            backup_state=(
-                bool(json["backupState"])
-                if json.get("backupState", None) is not None
-                else None
-            ),
+            user_handle=str(json["userHandle"])
+            if json.get("userHandle", None) is not None
+            else None,
+            large_blob=str(json["largeBlob"])
+            if json.get("largeBlob", None) is not None
+            else None,
+            backup_eligibility=bool(json["backupEligibility"])
+            if json.get("backupEligibility", None) is not None
+            else None,
+            backup_state=bool(json["backupState"])
+            if json.get("backupState", None) is not None
+            else None,
+            user_name=str(json["userName"])
+            if json.get("userName", None) is not None
+            else None,
+            user_display_name=str(json["userDisplayName"])
+            if json.get("userDisplayName", None) is not None
+            else None,
         )
 
 
@@ -561,6 +552,44 @@ class CredentialAdded:
 
     @classmethod
     def from_json(cls, json: T_JSON_DICT) -> CredentialAdded:
+        return cls(
+            authenticator_id=AuthenticatorId.from_json(json["authenticatorId"]),
+            credential=Credential.from_json(json["credential"]),
+        )
+
+
+@event_class("WebAuthn.credentialDeleted")
+@dataclass
+class CredentialDeleted:
+    """
+    Triggered when a credential is deleted, e.g. through
+    PublicKeyCredential.signalUnknownCredential().
+    """
+
+    authenticator_id: AuthenticatorId
+    credential_id: str
+
+    @classmethod
+    def from_json(cls, json: T_JSON_DICT) -> CredentialDeleted:
+        return cls(
+            authenticator_id=AuthenticatorId.from_json(json["authenticatorId"]),
+            credential_id=str(json["credentialId"]),
+        )
+
+
+@event_class("WebAuthn.credentialUpdated")
+@dataclass
+class CredentialUpdated:
+    """
+    Triggered when a credential is updated, e.g. through
+    PublicKeyCredential.signalCurrentUserDetails().
+    """
+
+    authenticator_id: AuthenticatorId
+    credential: Credential
+
+    @classmethod
+    def from_json(cls, json: T_JSON_DICT) -> CredentialUpdated:
         return cls(
             authenticator_id=AuthenticatorId.from_json(json["authenticatorId"]),
             credential=Credential.from_json(json["credential"]),

@@ -142,31 +142,23 @@ class ServiceWorkerVersion:
                 json["runningStatus"]
             ),
             status=ServiceWorkerVersionStatus.from_json(json["status"]),
-            script_last_modified=(
-                float(json["scriptLastModified"])
-                if json.get("scriptLastModified", None) is not None
-                else None
-            ),
-            script_response_time=(
-                float(json["scriptResponseTime"])
-                if json.get("scriptResponseTime", None) is not None
-                else None
-            ),
-            controlled_clients=(
-                [target.TargetID.from_json(i) for i in json["controlledClients"]]
-                if json.get("controlledClients", None) is not None
-                else None
-            ),
-            target_id=(
-                target.TargetID.from_json(json["targetId"])
-                if json.get("targetId", None) is not None
-                else None
-            ),
-            router_rules=(
-                str(json["routerRules"])
-                if json.get("routerRules", None) is not None
-                else None
-            ),
+            script_last_modified=float(json["scriptLastModified"])
+            if json.get("scriptLastModified", None) is not None
+            else None,
+            script_response_time=float(json["scriptResponseTime"])
+            if json.get("scriptResponseTime", None) is not None
+            else None,
+            controlled_clients=[
+                target.TargetID.from_json(i) for i in json["controlledClients"]
+            ]
+            if json.get("controlledClients", None) is not None
+            else None,
+            target_id=target.TargetID.from_json(json["targetId"])
+            if json.get("targetId", None) is not None
+            else None,
+            router_rules=str(json["routerRules"])
+            if json.get("routerRules", None) is not None
+            else None,
         )
 
 
@@ -230,7 +222,6 @@ def deliver_push_message(
 
 
 def disable() -> typing.Generator[T_JSON_DICT, T_JSON_DICT, None]:
-
     cmd_dict: T_JSON_DICT = {
         "method": "ServiceWorker.disable",
     }
@@ -278,7 +269,6 @@ def dispatch_periodic_sync_event(
 
 
 def enable() -> typing.Generator[T_JSON_DICT, T_JSON_DICT, None]:
-
     cmd_dict: T_JSON_DICT = {
         "method": "ServiceWorker.enable",
     }
@@ -340,7 +330,6 @@ def start_worker(scope_url: str) -> typing.Generator[T_JSON_DICT, T_JSON_DICT, N
 
 
 def stop_all_workers() -> typing.Generator[T_JSON_DICT, T_JSON_DICT, None]:
-
     cmd_dict: T_JSON_DICT = {
         "method": "ServiceWorker.stopAllWorkers",
     }

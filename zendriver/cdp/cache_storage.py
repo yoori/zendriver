@@ -9,7 +9,7 @@ from __future__ import annotations
 import enum
 import typing
 from dataclasses import dataclass
-from .util import T_JSON_DICT
+from .util import event_class, T_JSON_DICT
 
 from . import storage
 
@@ -144,11 +144,9 @@ class Cache:
             security_origin=str(json["securityOrigin"]),
             storage_key=str(json["storageKey"]),
             cache_name=str(json["cacheName"]),
-            storage_bucket=(
-                storage.StorageBucket.from_json(json["storageBucket"])
-                if json.get("storageBucket", None) is not None
-                else None
-            ),
+            storage_bucket=storage.StorageBucket.from_json(json["storageBucket"])
+            if json.get("storageBucket", None) is not None
+            else None,
         )
 
 

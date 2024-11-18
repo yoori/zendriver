@@ -210,24 +210,20 @@ class UserAgentMetadata:
             architecture=str(json["architecture"]),
             model=str(json["model"]),
             mobile=bool(json["mobile"]),
-            brands=(
-                [UserAgentBrandVersion.from_json(i) for i in json["brands"]]
-                if json.get("brands", None) is not None
-                else None
-            ),
-            full_version_list=(
-                [UserAgentBrandVersion.from_json(i) for i in json["fullVersionList"]]
-                if json.get("fullVersionList", None) is not None
-                else None
-            ),
-            full_version=(
-                str(json["fullVersion"])
-                if json.get("fullVersion", None) is not None
-                else None
-            ),
-            bitness=(
-                str(json["bitness"]) if json.get("bitness", None) is not None else None
-            ),
+            brands=[UserAgentBrandVersion.from_json(i) for i in json["brands"]]
+            if json.get("brands", None) is not None
+            else None,
+            full_version_list=[
+                UserAgentBrandVersion.from_json(i) for i in json["fullVersionList"]
+            ]
+            if json.get("fullVersionList", None) is not None
+            else None,
+            full_version=str(json["fullVersion"])
+            if json.get("fullVersion", None) is not None
+            else None,
+            bitness=str(json["bitness"])
+            if json.get("bitness", None) is not None
+            else None,
             wow64=bool(json["wow64"]) if json.get("wow64", None) is not None else None,
         )
 
@@ -245,7 +241,6 @@ class SensorType(enum.Enum):
     GYROSCOPE = "gyroscope"
     LINEAR_ACCELERATION = "linear-acceleration"
     MAGNETOMETER = "magnetometer"
-    PROXIMITY = "proximity"
     RELATIVE_ORIENTATION = "relative-orientation"
 
     def to_json(self) -> str:
@@ -277,21 +272,15 @@ class SensorMetadata:
     @classmethod
     def from_json(cls, json: T_JSON_DICT) -> SensorMetadata:
         return cls(
-            available=(
-                bool(json["available"])
-                if json.get("available", None) is not None
-                else None
-            ),
-            minimum_frequency=(
-                float(json["minimumFrequency"])
-                if json.get("minimumFrequency", None) is not None
-                else None
-            ),
-            maximum_frequency=(
-                float(json["maximumFrequency"])
-                if json.get("maximumFrequency", None) is not None
-                else None
-            ),
+            available=bool(json["available"])
+            if json.get("available", None) is not None
+            else None,
+            minimum_frequency=float(json["minimumFrequency"])
+            if json.get("minimumFrequency", None) is not None
+            else None,
+            maximum_frequency=float(json["maximumFrequency"])
+            if json.get("maximumFrequency", None) is not None
+            else None,
         )
 
 
@@ -384,21 +373,59 @@ class SensorReading:
     @classmethod
     def from_json(cls, json: T_JSON_DICT) -> SensorReading:
         return cls(
-            single=(
-                SensorReadingSingle.from_json(json["single"])
-                if json.get("single", None) is not None
-                else None
-            ),
-            xyz=(
-                SensorReadingXYZ.from_json(json["xyz"])
-                if json.get("xyz", None) is not None
-                else None
-            ),
-            quaternion=(
-                SensorReadingQuaternion.from_json(json["quaternion"])
-                if json.get("quaternion", None) is not None
-                else None
-            ),
+            single=SensorReadingSingle.from_json(json["single"])
+            if json.get("single", None) is not None
+            else None,
+            xyz=SensorReadingXYZ.from_json(json["xyz"])
+            if json.get("xyz", None) is not None
+            else None,
+            quaternion=SensorReadingQuaternion.from_json(json["quaternion"])
+            if json.get("quaternion", None) is not None
+            else None,
+        )
+
+
+class PressureSource(enum.Enum):
+    CPU = "cpu"
+
+    def to_json(self) -> str:
+        return self.value
+
+    @classmethod
+    def from_json(cls, json: str) -> PressureSource:
+        return cls(json)
+
+
+class PressureState(enum.Enum):
+    NOMINAL = "nominal"
+    FAIR = "fair"
+    SERIOUS = "serious"
+    CRITICAL = "critical"
+
+    def to_json(self) -> str:
+        return self.value
+
+    @classmethod
+    def from_json(cls, json: str) -> PressureState:
+        return cls(json)
+
+
+@dataclass
+class PressureMetadata:
+    available: typing.Optional[bool] = None
+
+    def to_json(self) -> T_JSON_DICT:
+        json: T_JSON_DICT = dict()
+        if self.available is not None:
+            json["available"] = self.available
+        return json
+
+    @classmethod
+    def from_json(cls, json: T_JSON_DICT) -> PressureMetadata:
+        return cls(
+            available=bool(json["available"])
+            if json.get("available", None) is not None
+            else None,
         )
 
 
@@ -836,6 +863,58 @@ def set_sensor_override_readings(
     params["reading"] = reading.to_json()
     cmd_dict: T_JSON_DICT = {
         "method": "Emulation.setSensorOverrideReadings",
+        "params": params,
+    }
+    json = yield cmd_dict
+
+
+def set_pressure_source_override_enabled(
+    enabled: bool,
+    source: PressureSource,
+    metadata: typing.Optional[PressureMetadata] = None,
+) -> typing.Generator[T_JSON_DICT, T_JSON_DICT, None]:
+    """
+    Overrides a pressure source of a given type, as used by the Compute
+    Pressure API, so that updates to PressureObserver.observe() are provided
+    via setPressureStateOverride instead of being retrieved from
+    platform-provided telemetry data.
+
+    **EXPERIMENTAL**
+
+    :param enabled:
+    :param source:
+    :param metadata: *(Optional)*
+    """
+    params: T_JSON_DICT = dict()
+    params["enabled"] = enabled
+    params["source"] = source.to_json()
+    if metadata is not None:
+        params["metadata"] = metadata.to_json()
+    cmd_dict: T_JSON_DICT = {
+        "method": "Emulation.setPressureSourceOverrideEnabled",
+        "params": params,
+    }
+    json = yield cmd_dict
+
+
+def set_pressure_state_override(
+    source: PressureSource, state: PressureState
+) -> typing.Generator[T_JSON_DICT, T_JSON_DICT, None]:
+    """
+    Provides a given pressure state that will be processed and eventually be
+    delivered to PressureObserver users. ``source`` must have been previously
+    overridden by setPressureSourceOverrideEnabled.
+
+    **EXPERIMENTAL**
+
+    :param source:
+    :param state:
+    """
+    params: T_JSON_DICT = dict()
+    params["source"] = source.to_json()
+    params["state"] = state.to_json()
+    cmd_dict: T_JSON_DICT = {
+        "method": "Emulation.setPressureStateOverride",
         "params": params,
     }
     json = yield cmd_dict
