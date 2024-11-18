@@ -6,8 +6,10 @@
 # CDP domain: IO
 
 from __future__ import annotations
+import enum
 import typing
-from .util import T_JSON_DICT
+from dataclasses import dataclass
+from .util import event_class, T_JSON_DICT
 
 from . import runtime
 
@@ -75,11 +77,9 @@ def read(
     }
     json = yield cmd_dict
     return (
-        (
-            bool(json["base64Encoded"])
-            if json.get("base64Encoded", None) is not None
-            else None
-        ),
+        bool(json["base64Encoded"])
+        if json.get("base64Encoded", None) is not None
+        else None,
         str(json["data"]),
         bool(json["eof"]),
     )
