@@ -33,6 +33,8 @@ from pathlib import Path
 # installed via inline script metadata, but mypy doesn't know that
 import requests  # type: ignore
 
+REPO_ROOT = Path(__file__).parent.parent
+
 # for creating GitHub release
 GITHUB_REPO_SLUG = "stephanlensky/zendriver"
 
@@ -60,9 +62,8 @@ CHANGELOG_MD_UNRELEASED_TEMPLATE = (
 
 
 def set_working_directory() -> None:
-    repo_root = Path(__file__).parent.parent
-    print(f"Changing working directory to {repo_root}")
-    os.chdir(repo_root)
+    print(f"Changing working directory to {REPO_ROOT}")
+    os.chdir(REPO_ROOT)
 
 
 def ensure_clean_working_directory() -> None:
