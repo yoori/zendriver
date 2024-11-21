@@ -6,9 +6,10 @@
 # CDP domain: HeadlessExperimental (experimental)
 
 from __future__ import annotations
+import enum
 import typing
 from dataclasses import dataclass
-from .util import T_JSON_DICT
+from .util import event_class, T_JSON_DICT
 
 
 from deprecated.sphinx import deprecated  # type: ignore
@@ -42,17 +43,15 @@ class ScreenshotParams:
     @classmethod
     def from_json(cls, json: T_JSON_DICT) -> ScreenshotParams:
         return cls(
-            format_=(
-                str(json["format"]) if json.get("format", None) is not None else None
-            ),
-            quality=(
-                int(json["quality"]) if json.get("quality", None) is not None else None
-            ),
-            optimize_for_speed=(
-                bool(json["optimizeForSpeed"])
-                if json.get("optimizeForSpeed", None) is not None
-                else None
-            ),
+            format_=str(json["format"])
+            if json.get("format", None) is not None
+            else None,
+            quality=int(json["quality"])
+            if json.get("quality", None) is not None
+            else None,
+            optimize_for_speed=bool(json["optimizeForSpeed"])
+            if json.get("optimizeForSpeed", None) is not None
+            else None,
         )
 
 
@@ -95,11 +94,9 @@ def begin_frame(
     json = yield cmd_dict
     return (
         bool(json["hasDamage"]),
-        (
-            str(json["screenshotData"])
-            if json.get("screenshotData", None) is not None
-            else None
-        ),
+        str(json["screenshotData"])
+        if json.get("screenshotData", None) is not None
+        else None,
     )
 
 

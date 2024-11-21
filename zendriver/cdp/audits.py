@@ -106,6 +106,8 @@ class CookieExclusionReason(enum.Enum):
         "ExcludeThirdPartyCookieBlockedInFirstPartySet"
     )
     EXCLUDE_THIRD_PARTY_PHASEOUT = "ExcludeThirdPartyPhaseout"
+    EXCLUDE_PORT_MISMATCH = "ExcludePortMismatch"
+    EXCLUDE_SCHEME_MISMATCH = "ExcludeSchemeMismatch"
 
     def to_json(self) -> str:
         return self.value
@@ -136,6 +138,8 @@ class CookieWarningReason(enum.Enum):
     WARN_CROSS_SITE_REDIRECT_DOWNGRADE_CHANGES_INCLUSION = (
         "WarnCrossSiteRedirectDowngradeChangesInclusion"
     )
+    WARN_DEPRECATION_TRIAL_METADATA = "WarnDeprecationTrialMetadata"
+    WARN_THIRD_PARTY_COOKIE_HEURISTIC = "WarnThirdPartyCookieHeuristic"
 
     def to_json(self) -> str:
         return self.value
@@ -219,31 +223,21 @@ class CookieIssueDetails:
                 for i in json["cookieExclusionReasons"]
             ],
             operation=CookieOperation.from_json(json["operation"]),
-            cookie=(
-                AffectedCookie.from_json(json["cookie"])
-                if json.get("cookie", None) is not None
-                else None
-            ),
-            raw_cookie_line=(
-                str(json["rawCookieLine"])
-                if json.get("rawCookieLine", None) is not None
-                else None
-            ),
-            site_for_cookies=(
-                str(json["siteForCookies"])
-                if json.get("siteForCookies", None) is not None
-                else None
-            ),
-            cookie_url=(
-                str(json["cookieUrl"])
-                if json.get("cookieUrl", None) is not None
-                else None
-            ),
-            request=(
-                AffectedRequest.from_json(json["request"])
-                if json.get("request", None) is not None
-                else None
-            ),
+            cookie=AffectedCookie.from_json(json["cookie"])
+            if json.get("cookie", None) is not None
+            else None,
+            raw_cookie_line=str(json["rawCookieLine"])
+            if json.get("rawCookieLine", None) is not None
+            else None,
+            site_for_cookies=str(json["siteForCookies"])
+            if json.get("siteForCookies", None) is not None
+            else None,
+            cookie_url=str(json["cookieUrl"])
+            if json.get("cookieUrl", None) is not None
+            else None,
+            request=AffectedRequest.from_json(json["request"])
+            if json.get("request", None) is not None
+            else None,
         )
 
 
@@ -344,21 +338,15 @@ class MixedContentIssueDetails:
             ),
             insecure_url=str(json["insecureURL"]),
             main_resource_url=str(json["mainResourceURL"]),
-            resource_type=(
-                MixedContentResourceType.from_json(json["resourceType"])
-                if json.get("resourceType", None) is not None
-                else None
-            ),
-            request=(
-                AffectedRequest.from_json(json["request"])
-                if json.get("request", None) is not None
-                else None
-            ),
-            frame=(
-                AffectedFrame.from_json(json["frame"])
-                if json.get("frame", None) is not None
-                else None
-            ),
+            resource_type=MixedContentResourceType.from_json(json["resourceType"])
+            if json.get("resourceType", None) is not None
+            else None,
+            request=AffectedRequest.from_json(json["request"])
+            if json.get("request", None) is not None
+            else None,
+            frame=AffectedFrame.from_json(json["frame"])
+            if json.get("frame", None) is not None
+            else None,
         )
 
 
@@ -423,16 +411,12 @@ class BlockedByResponseIssueDetails:
         return cls(
             request=AffectedRequest.from_json(json["request"]),
             reason=BlockedByResponseReason.from_json(json["reason"]),
-            parent_frame=(
-                AffectedFrame.from_json(json["parentFrame"])
-                if json.get("parentFrame", None) is not None
-                else None
-            ),
-            blocked_frame=(
-                AffectedFrame.from_json(json["blockedFrame"])
-                if json.get("blockedFrame", None) is not None
-                else None
-            ),
+            parent_frame=AffectedFrame.from_json(json["parentFrame"])
+            if json.get("parentFrame", None) is not None
+            else None,
+            blocked_frame=AffectedFrame.from_json(json["blockedFrame"])
+            if json.get("blockedFrame", None) is not None
+            else None,
         )
 
 
@@ -529,11 +513,9 @@ class SourceCodeLocation:
             url=str(json["url"]),
             line_number=int(json["lineNumber"]),
             column_number=int(json["columnNumber"]),
-            script_id=(
-                runtime.ScriptId.from_json(json["scriptId"])
-                if json.get("scriptId", None) is not None
-                else None
-            ),
+            script_id=runtime.ScriptId.from_json(json["scriptId"])
+            if json.get("scriptId", None) is not None
+            else None,
         )
 
 
@@ -580,26 +562,20 @@ class ContentSecurityPolicyIssueDetails:
             content_security_policy_violation_type=ContentSecurityPolicyViolationType.from_json(
                 json["contentSecurityPolicyViolationType"]
             ),
-            blocked_url=(
-                str(json["blockedURL"])
-                if json.get("blockedURL", None) is not None
-                else None
-            ),
-            frame_ancestor=(
-                AffectedFrame.from_json(json["frameAncestor"])
-                if json.get("frameAncestor", None) is not None
-                else None
-            ),
-            source_code_location=(
-                SourceCodeLocation.from_json(json["sourceCodeLocation"])
-                if json.get("sourceCodeLocation", None) is not None
-                else None
-            ),
-            violating_node_id=(
-                dom.BackendNodeId.from_json(json["violatingNodeId"])
-                if json.get("violatingNodeId", None) is not None
-                else None
-            ),
+            blocked_url=str(json["blockedURL"])
+            if json.get("blockedURL", None) is not None
+            else None,
+            frame_ancestor=AffectedFrame.from_json(json["frameAncestor"])
+            if json.get("frameAncestor", None) is not None
+            else None,
+            source_code_location=SourceCodeLocation.from_json(
+                json["sourceCodeLocation"]
+            )
+            if json.get("sourceCodeLocation", None) is not None
+            else None,
+            violating_node_id=dom.BackendNodeId.from_json(json["violatingNodeId"])
+            if json.get("violatingNodeId", None) is not None
+            else None,
         )
 
 
@@ -730,26 +706,22 @@ class CorsIssueDetails:
             ),
             is_warning=bool(json["isWarning"]),
             request=AffectedRequest.from_json(json["request"]),
-            location=(
-                SourceCodeLocation.from_json(json["location"])
-                if json.get("location", None) is not None
-                else None
-            ),
-            initiator_origin=(
-                str(json["initiatorOrigin"])
-                if json.get("initiatorOrigin", None) is not None
-                else None
-            ),
-            resource_ip_address_space=(
-                network.IPAddressSpace.from_json(json["resourceIPAddressSpace"])
-                if json.get("resourceIPAddressSpace", None) is not None
-                else None
-            ),
-            client_security_state=(
-                network.ClientSecurityState.from_json(json["clientSecurityState"])
-                if json.get("clientSecurityState", None) is not None
-                else None
-            ),
+            location=SourceCodeLocation.from_json(json["location"])
+            if json.get("location", None) is not None
+            else None,
+            initiator_origin=str(json["initiatorOrigin"])
+            if json.get("initiatorOrigin", None) is not None
+            else None,
+            resource_ip_address_space=network.IPAddressSpace.from_json(
+                json["resourceIPAddressSpace"]
+            )
+            if json.get("resourceIPAddressSpace", None) is not None
+            else None,
+            client_security_state=network.ClientSecurityState.from_json(
+                json["clientSecurityState"]
+            )
+            if json.get("clientSecurityState", None) is not None
+            else None,
         )
 
 
@@ -776,6 +748,9 @@ class AttributionReportingIssueType(enum.Enum):
     NO_REGISTER_TRIGGER_HEADER = "NoRegisterTriggerHeader"
     NO_REGISTER_OS_SOURCE_HEADER = "NoRegisterOsSourceHeader"
     NO_REGISTER_OS_TRIGGER_HEADER = "NoRegisterOsTriggerHeader"
+    NAVIGATION_REGISTRATION_UNIQUE_SCOPE_ALREADY_SET = (
+        "NavigationRegistrationUniqueScopeAlreadySet"
+    )
 
     def to_json(self) -> str:
         return self.value
@@ -852,21 +827,15 @@ class AttributionReportingIssueDetails:
             violation_type=AttributionReportingIssueType.from_json(
                 json["violationType"]
             ),
-            request=(
-                AffectedRequest.from_json(json["request"])
-                if json.get("request", None) is not None
-                else None
-            ),
-            violating_node_id=(
-                dom.BackendNodeId.from_json(json["violatingNodeId"])
-                if json.get("violatingNodeId", None) is not None
-                else None
-            ),
-            invalid_parameter=(
-                str(json["invalidParameter"])
-                if json.get("invalidParameter", None) is not None
-                else None
-            ),
+            request=AffectedRequest.from_json(json["request"])
+            if json.get("request", None) is not None
+            else None,
+            violating_node_id=dom.BackendNodeId.from_json(json["violatingNodeId"])
+            if json.get("violatingNodeId", None) is not None
+            else None,
+            invalid_parameter=str(json["invalidParameter"])
+            if json.get("invalidParameter", None) is not None
+            else None,
         )
 
 
@@ -926,11 +895,9 @@ class NavigatorUserAgentIssueDetails:
     def from_json(cls, json: T_JSON_DICT) -> NavigatorUserAgentIssueDetails:
         return cls(
             url=str(json["url"]),
-            location=(
-                SourceCodeLocation.from_json(json["location"])
-                if json.get("location", None) is not None
-                else None
-            ),
+            location=SourceCodeLocation.from_json(json["location"])
+            if json.get("location", None) is not None
+            else None,
         )
 
 
@@ -957,7 +924,6 @@ class SharedDictionaryIssueDetails:
 
 
 class GenericIssueErrorType(enum.Enum):
-    CROSS_ORIGIN_PORTAL_POST_MESSAGE_ERROR = "CrossOriginPortalPostMessageError"
     FORM_LABEL_FOR_NAME_ERROR = "FormLabelForNameError"
     FORM_DUPLICATE_ID_FOR_INPUT_ERROR = "FormDuplicateIdForInputError"
     FORM_INPUT_WITH_NO_LABEL_ERROR = "FormInputWithNoLabelError"
@@ -1020,26 +986,18 @@ class GenericIssueDetails:
     def from_json(cls, json: T_JSON_DICT) -> GenericIssueDetails:
         return cls(
             error_type=GenericIssueErrorType.from_json(json["errorType"]),
-            frame_id=(
-                page.FrameId.from_json(json["frameId"])
-                if json.get("frameId", None) is not None
-                else None
-            ),
-            violating_node_id=(
-                dom.BackendNodeId.from_json(json["violatingNodeId"])
-                if json.get("violatingNodeId", None) is not None
-                else None
-            ),
-            violating_node_attribute=(
-                str(json["violatingNodeAttribute"])
-                if json.get("violatingNodeAttribute", None) is not None
-                else None
-            ),
-            request=(
-                AffectedRequest.from_json(json["request"])
-                if json.get("request", None) is not None
-                else None
-            ),
+            frame_id=page.FrameId.from_json(json["frameId"])
+            if json.get("frameId", None) is not None
+            else None,
+            violating_node_id=dom.BackendNodeId.from_json(json["violatingNodeId"])
+            if json.get("violatingNodeId", None) is not None
+            else None,
+            violating_node_attribute=str(json["violatingNodeAttribute"])
+            if json.get("violatingNodeAttribute", None) is not None
+            else None,
+            request=AffectedRequest.from_json(json["request"])
+            if json.get("request", None) is not None
+            else None,
         )
 
 
@@ -1072,11 +1030,9 @@ class DeprecationIssueDetails:
                 json["sourceCodeLocation"]
             ),
             type_=str(json["type"]),
-            affected_frame=(
-                AffectedFrame.from_json(json["affectedFrame"])
-                if json.get("affectedFrame", None) is not None
-                else None
-            ),
+            affected_frame=AffectedFrame.from_json(json["affectedFrame"])
+            if json.get("affectedFrame", None) is not None
+            else None,
         )
 
 
@@ -1221,7 +1177,7 @@ class FederatedAuthRequestIssueReason(enum.Enum):
     THIRD_PARTY_COOKIES_BLOCKED = "ThirdPartyCookiesBlocked"
     NOT_SIGNED_IN_WITH_IDP = "NotSignedInWithIdp"
     MISSING_TRANSIENT_USER_ACTIVATION = "MissingTransientUserActivation"
-    REPLACED_BY_BUTTON_MODE = "ReplacedByButtonMode"
+    REPLACED_BY_ACTIVE_MODE = "ReplacedByActiveMode"
     INVALID_FIELDS_SPECIFIED = "InvalidFieldsSpecified"
     RELYING_PARTY_ORIGIN_IS_OPAQUE = "RelyingPartyOriginIsOpaque"
     TYPE_NOT_MATCHING = "TypeNotMatching"
@@ -1333,11 +1289,9 @@ class FailedRequestInfo:
         return cls(
             url=str(json["url"]),
             failure_message=str(json["failureMessage"]),
-            request_id=(
-                network.RequestId.from_json(json["requestId"])
-                if json.get("requestId", None) is not None
-                else None
-            ),
+            request_id=network.RequestId.from_json(json["requestId"])
+            if json.get("requestId", None) is not None
+            else None,
         )
 
 
@@ -1387,11 +1341,9 @@ class StylesheetLoadingIssueDetails:
             style_sheet_loading_issue_reason=StyleSheetLoadingIssueReason.from_json(
                 json["styleSheetLoadingIssueReason"]
             ),
-            failed_request_info=(
-                FailedRequestInfo.from_json(json["failedRequestInfo"])
-                if json.get("failedRequestInfo", None) is not None
-                else None
-            ),
+            failed_request_info=FailedRequestInfo.from_json(json["failedRequestInfo"])
+            if json.get("failedRequestInfo", None) is not None
+            else None,
         )
 
 
@@ -1442,11 +1394,9 @@ class PropertyRuleIssueDetails:
             property_rule_issue_reason=PropertyRuleIssueReason.from_json(
                 json["propertyRuleIssueReason"]
             ),
-            property_value=(
-                str(json["propertyValue"])
-                if json.get("propertyValue", None) is not None
-                else None
-            ),
+            property_value=str(json["propertyValue"])
+            if json.get("propertyValue", None) is not None
+            else None,
         )
 
 
@@ -1634,134 +1584,109 @@ class InspectorIssueDetails:
     @classmethod
     def from_json(cls, json: T_JSON_DICT) -> InspectorIssueDetails:
         return cls(
-            cookie_issue_details=(
-                CookieIssueDetails.from_json(json["cookieIssueDetails"])
-                if json.get("cookieIssueDetails", None) is not None
-                else None
-            ),
-            mixed_content_issue_details=(
-                MixedContentIssueDetails.from_json(json["mixedContentIssueDetails"])
-                if json.get("mixedContentIssueDetails", None) is not None
-                else None
-            ),
-            blocked_by_response_issue_details=(
-                BlockedByResponseIssueDetails.from_json(
-                    json["blockedByResponseIssueDetails"]
-                )
-                if json.get("blockedByResponseIssueDetails", None) is not None
-                else None
-            ),
-            heavy_ad_issue_details=(
-                HeavyAdIssueDetails.from_json(json["heavyAdIssueDetails"])
-                if json.get("heavyAdIssueDetails", None) is not None
-                else None
-            ),
-            content_security_policy_issue_details=(
-                ContentSecurityPolicyIssueDetails.from_json(
-                    json["contentSecurityPolicyIssueDetails"]
-                )
-                if json.get("contentSecurityPolicyIssueDetails", None) is not None
-                else None
-            ),
-            shared_array_buffer_issue_details=(
-                SharedArrayBufferIssueDetails.from_json(
-                    json["sharedArrayBufferIssueDetails"]
-                )
-                if json.get("sharedArrayBufferIssueDetails", None) is not None
-                else None
-            ),
-            low_text_contrast_issue_details=(
-                LowTextContrastIssueDetails.from_json(
-                    json["lowTextContrastIssueDetails"]
-                )
-                if json.get("lowTextContrastIssueDetails", None) is not None
-                else None
-            ),
-            cors_issue_details=(
-                CorsIssueDetails.from_json(json["corsIssueDetails"])
-                if json.get("corsIssueDetails", None) is not None
-                else None
-            ),
-            attribution_reporting_issue_details=(
-                AttributionReportingIssueDetails.from_json(
-                    json["attributionReportingIssueDetails"]
-                )
-                if json.get("attributionReportingIssueDetails", None) is not None
-                else None
-            ),
-            quirks_mode_issue_details=(
-                QuirksModeIssueDetails.from_json(json["quirksModeIssueDetails"])
-                if json.get("quirksModeIssueDetails", None) is not None
-                else None
-            ),
-            navigator_user_agent_issue_details=(
-                NavigatorUserAgentIssueDetails.from_json(
-                    json["navigatorUserAgentIssueDetails"]
-                )
-                if json.get("navigatorUserAgentIssueDetails", None) is not None
-                else None
-            ),
-            generic_issue_details=(
-                GenericIssueDetails.from_json(json["genericIssueDetails"])
-                if json.get("genericIssueDetails", None) is not None
-                else None
-            ),
-            deprecation_issue_details=(
-                DeprecationIssueDetails.from_json(json["deprecationIssueDetails"])
-                if json.get("deprecationIssueDetails", None) is not None
-                else None
-            ),
-            client_hint_issue_details=(
-                ClientHintIssueDetails.from_json(json["clientHintIssueDetails"])
-                if json.get("clientHintIssueDetails", None) is not None
-                else None
-            ),
-            federated_auth_request_issue_details=(
-                FederatedAuthRequestIssueDetails.from_json(
-                    json["federatedAuthRequestIssueDetails"]
-                )
-                if json.get("federatedAuthRequestIssueDetails", None) is not None
-                else None
-            ),
-            bounce_tracking_issue_details=(
-                BounceTrackingIssueDetails.from_json(json["bounceTrackingIssueDetails"])
-                if json.get("bounceTrackingIssueDetails", None) is not None
-                else None
-            ),
-            cookie_deprecation_metadata_issue_details=(
-                CookieDeprecationMetadataIssueDetails.from_json(
-                    json["cookieDeprecationMetadataIssueDetails"]
-                )
-                if json.get("cookieDeprecationMetadataIssueDetails", None) is not None
-                else None
-            ),
-            stylesheet_loading_issue_details=(
-                StylesheetLoadingIssueDetails.from_json(
-                    json["stylesheetLoadingIssueDetails"]
-                )
-                if json.get("stylesheetLoadingIssueDetails", None) is not None
-                else None
-            ),
-            property_rule_issue_details=(
-                PropertyRuleIssueDetails.from_json(json["propertyRuleIssueDetails"])
-                if json.get("propertyRuleIssueDetails", None) is not None
-                else None
-            ),
-            federated_auth_user_info_request_issue_details=(
-                FederatedAuthUserInfoRequestIssueDetails.from_json(
-                    json["federatedAuthUserInfoRequestIssueDetails"]
-                )
-                if json.get("federatedAuthUserInfoRequestIssueDetails", None)
-                is not None
-                else None
-            ),
-            shared_dictionary_issue_details=(
-                SharedDictionaryIssueDetails.from_json(
-                    json["sharedDictionaryIssueDetails"]
-                )
-                if json.get("sharedDictionaryIssueDetails", None) is not None
-                else None
-            ),
+            cookie_issue_details=CookieIssueDetails.from_json(
+                json["cookieIssueDetails"]
+            )
+            if json.get("cookieIssueDetails", None) is not None
+            else None,
+            mixed_content_issue_details=MixedContentIssueDetails.from_json(
+                json["mixedContentIssueDetails"]
+            )
+            if json.get("mixedContentIssueDetails", None) is not None
+            else None,
+            blocked_by_response_issue_details=BlockedByResponseIssueDetails.from_json(
+                json["blockedByResponseIssueDetails"]
+            )
+            if json.get("blockedByResponseIssueDetails", None) is not None
+            else None,
+            heavy_ad_issue_details=HeavyAdIssueDetails.from_json(
+                json["heavyAdIssueDetails"]
+            )
+            if json.get("heavyAdIssueDetails", None) is not None
+            else None,
+            content_security_policy_issue_details=ContentSecurityPolicyIssueDetails.from_json(
+                json["contentSecurityPolicyIssueDetails"]
+            )
+            if json.get("contentSecurityPolicyIssueDetails", None) is not None
+            else None,
+            shared_array_buffer_issue_details=SharedArrayBufferIssueDetails.from_json(
+                json["sharedArrayBufferIssueDetails"]
+            )
+            if json.get("sharedArrayBufferIssueDetails", None) is not None
+            else None,
+            low_text_contrast_issue_details=LowTextContrastIssueDetails.from_json(
+                json["lowTextContrastIssueDetails"]
+            )
+            if json.get("lowTextContrastIssueDetails", None) is not None
+            else None,
+            cors_issue_details=CorsIssueDetails.from_json(json["corsIssueDetails"])
+            if json.get("corsIssueDetails", None) is not None
+            else None,
+            attribution_reporting_issue_details=AttributionReportingIssueDetails.from_json(
+                json["attributionReportingIssueDetails"]
+            )
+            if json.get("attributionReportingIssueDetails", None) is not None
+            else None,
+            quirks_mode_issue_details=QuirksModeIssueDetails.from_json(
+                json["quirksModeIssueDetails"]
+            )
+            if json.get("quirksModeIssueDetails", None) is not None
+            else None,
+            navigator_user_agent_issue_details=NavigatorUserAgentIssueDetails.from_json(
+                json["navigatorUserAgentIssueDetails"]
+            )
+            if json.get("navigatorUserAgentIssueDetails", None) is not None
+            else None,
+            generic_issue_details=GenericIssueDetails.from_json(
+                json["genericIssueDetails"]
+            )
+            if json.get("genericIssueDetails", None) is not None
+            else None,
+            deprecation_issue_details=DeprecationIssueDetails.from_json(
+                json["deprecationIssueDetails"]
+            )
+            if json.get("deprecationIssueDetails", None) is not None
+            else None,
+            client_hint_issue_details=ClientHintIssueDetails.from_json(
+                json["clientHintIssueDetails"]
+            )
+            if json.get("clientHintIssueDetails", None) is not None
+            else None,
+            federated_auth_request_issue_details=FederatedAuthRequestIssueDetails.from_json(
+                json["federatedAuthRequestIssueDetails"]
+            )
+            if json.get("federatedAuthRequestIssueDetails", None) is not None
+            else None,
+            bounce_tracking_issue_details=BounceTrackingIssueDetails.from_json(
+                json["bounceTrackingIssueDetails"]
+            )
+            if json.get("bounceTrackingIssueDetails", None) is not None
+            else None,
+            cookie_deprecation_metadata_issue_details=CookieDeprecationMetadataIssueDetails.from_json(
+                json["cookieDeprecationMetadataIssueDetails"]
+            )
+            if json.get("cookieDeprecationMetadataIssueDetails", None) is not None
+            else None,
+            stylesheet_loading_issue_details=StylesheetLoadingIssueDetails.from_json(
+                json["stylesheetLoadingIssueDetails"]
+            )
+            if json.get("stylesheetLoadingIssueDetails", None) is not None
+            else None,
+            property_rule_issue_details=PropertyRuleIssueDetails.from_json(
+                json["propertyRuleIssueDetails"]
+            )
+            if json.get("propertyRuleIssueDetails", None) is not None
+            else None,
+            federated_auth_user_info_request_issue_details=FederatedAuthUserInfoRequestIssueDetails.from_json(
+                json["federatedAuthUserInfoRequestIssueDetails"]
+            )
+            if json.get("federatedAuthUserInfoRequestIssueDetails", None) is not None
+            else None,
+            shared_dictionary_issue_details=SharedDictionaryIssueDetails.from_json(
+                json["sharedDictionaryIssueDetails"]
+            )
+            if json.get("sharedDictionaryIssueDetails", None) is not None
+            else None,
         )
 
 
@@ -1809,11 +1734,9 @@ class InspectorIssue:
         return cls(
             code=InspectorIssueCode.from_json(json["code"]),
             details=InspectorIssueDetails.from_json(json["details"]),
-            issue_id=(
-                IssueId.from_json(json["issueId"])
-                if json.get("issueId", None) is not None
-                else None
-            ),
+            issue_id=IssueId.from_json(json["issueId"])
+            if json.get("issueId", None) is not None
+            else None,
         )
 
 

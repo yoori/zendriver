@@ -6,6 +6,7 @@
 # CDP domain: Database (experimental)
 
 from __future__ import annotations
+import enum
 import typing
 from dataclasses import dataclass
 from .util import event_class, T_JSON_DICT
@@ -109,7 +110,9 @@ def enable() -> typing.Generator[T_JSON_DICT, T_JSON_DICT, None]:
     json = yield cmd_dict
 
 
-def execute_sql(database_id: DatabaseId, query: str) -> typing.Generator[
+def execute_sql(
+    database_id: DatabaseId, query: str
+) -> typing.Generator[
     T_JSON_DICT,
     T_JSON_DICT,
     typing.Tuple[
@@ -136,17 +139,13 @@ def execute_sql(database_id: DatabaseId, query: str) -> typing.Generator[
     }
     json = yield cmd_dict
     return (
-        (
-            [str(i) for i in json["columnNames"]]
-            if json.get("columnNames", None) is not None
-            else None
-        ),
+        [str(i) for i in json["columnNames"]]
+        if json.get("columnNames", None) is not None
+        else None,
         [i for i in json["values"]] if json.get("values", None) is not None else None,
-        (
-            Error.from_json(json["sqlError"])
-            if json.get("sqlError", None) is not None
-            else None
-        ),
+        Error.from_json(json["sqlError"])
+        if json.get("sqlError", None) is not None
+        else None,
     )
 
 

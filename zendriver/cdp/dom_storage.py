@@ -6,6 +6,7 @@
 # CDP domain: DOMStorage (experimental)
 
 from __future__ import annotations
+import enum
 import typing
 from dataclasses import dataclass
 from .util import event_class, T_JSON_DICT
@@ -51,16 +52,12 @@ class StorageId:
     def from_json(cls, json: T_JSON_DICT) -> StorageId:
         return cls(
             is_local_storage=bool(json["isLocalStorage"]),
-            security_origin=(
-                str(json["securityOrigin"])
-                if json.get("securityOrigin", None) is not None
-                else None
-            ),
-            storage_key=(
-                SerializedStorageKey.from_json(json["storageKey"])
-                if json.get("storageKey", None) is not None
-                else None
-            ),
+            security_origin=str(json["securityOrigin"])
+            if json.get("securityOrigin", None) is not None
+            else None,
+            storage_key=SerializedStorageKey.from_json(json["storageKey"])
+            if json.get("storageKey", None) is not None
+            else None,
         )
 
 

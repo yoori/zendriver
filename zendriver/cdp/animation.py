@@ -6,6 +6,7 @@
 # CDP domain: Animation (experimental)
 
 from __future__ import annotations
+import enum
 import typing
 from dataclasses import dataclass
 from .util import event_class, T_JSON_DICT
@@ -86,17 +87,15 @@ class Animation:
             start_time=float(json["startTime"]),
             current_time=float(json["currentTime"]),
             type_=str(json["type"]),
-            source=(
-                AnimationEffect.from_json(json["source"])
-                if json.get("source", None) is not None
-                else None
-            ),
+            source=AnimationEffect.from_json(json["source"])
+            if json.get("source", None) is not None
+            else None,
             css_id=str(json["cssId"]) if json.get("cssId", None) is not None else None,
-            view_or_scroll_timeline=(
-                ViewOrScrollTimeline.from_json(json["viewOrScrollTimeline"])
-                if json.get("viewOrScrollTimeline", None) is not None
-                else None
-            ),
+            view_or_scroll_timeline=ViewOrScrollTimeline.from_json(
+                json["viewOrScrollTimeline"]
+            )
+            if json.get("viewOrScrollTimeline", None) is not None
+            else None,
         )
 
 
@@ -142,26 +141,18 @@ class ViewOrScrollTimeline:
     def from_json(cls, json: T_JSON_DICT) -> ViewOrScrollTimeline:
         return cls(
             axis=dom.ScrollOrientation.from_json(json["axis"]),
-            source_node_id=(
-                dom.BackendNodeId.from_json(json["sourceNodeId"])
-                if json.get("sourceNodeId", None) is not None
-                else None
-            ),
-            start_offset=(
-                float(json["startOffset"])
-                if json.get("startOffset", None) is not None
-                else None
-            ),
-            end_offset=(
-                float(json["endOffset"])
-                if json.get("endOffset", None) is not None
-                else None
-            ),
-            subject_node_id=(
-                dom.BackendNodeId.from_json(json["subjectNodeId"])
-                if json.get("subjectNodeId", None) is not None
-                else None
-            ),
+            source_node_id=dom.BackendNodeId.from_json(json["sourceNodeId"])
+            if json.get("sourceNodeId", None) is not None
+            else None,
+            start_offset=float(json["startOffset"])
+            if json.get("startOffset", None) is not None
+            else None,
+            end_offset=float(json["endOffset"])
+            if json.get("endOffset", None) is not None
+            else None,
+            subject_node_id=dom.BackendNodeId.from_json(json["subjectNodeId"])
+            if json.get("subjectNodeId", None) is not None
+            else None,
         )
 
 
@@ -231,16 +222,12 @@ class AnimationEffect:
             direction=str(json["direction"]),
             fill=str(json["fill"]),
             easing=str(json["easing"]),
-            backend_node_id=(
-                dom.BackendNodeId.from_json(json["backendNodeId"])
-                if json.get("backendNodeId", None) is not None
-                else None
-            ),
-            keyframes_rule=(
-                KeyframesRule.from_json(json["keyframesRule"])
-                if json.get("keyframesRule", None) is not None
-                else None
-            ),
+            backend_node_id=dom.BackendNodeId.from_json(json["backendNodeId"])
+            if json.get("backendNodeId", None) is not None
+            else None,
+            keyframes_rule=KeyframesRule.from_json(json["keyframesRule"])
+            if json.get("keyframesRule", None) is not None
+            else None,
         )
 
 

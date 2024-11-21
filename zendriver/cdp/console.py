@@ -6,6 +6,7 @@
 # CDP domain: Console
 
 from __future__ import annotations
+import enum
 import typing
 from dataclasses import dataclass
 from .util import event_class, T_JSON_DICT
@@ -56,9 +57,9 @@ class ConsoleMessage:
             text=str(json["text"]),
             url=str(json["url"]) if json.get("url", None) is not None else None,
             line=int(json["line"]) if json.get("line", None) is not None else None,
-            column=(
-                int(json["column"]) if json.get("column", None) is not None else None
-            ),
+            column=int(json["column"])
+            if json.get("column", None) is not None
+            else None,
         )
 
 
