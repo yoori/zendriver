@@ -98,14 +98,12 @@ class Bounds:
             left=int(json["left"]) if json.get("left", None) is not None else None,
             top=int(json["top"]) if json.get("top", None) is not None else None,
             width=int(json["width"]) if json.get("width", None) is not None else None,
-            height=(
-                int(json["height"]) if json.get("height", None) is not None else None
-            ),
-            window_state=(
-                WindowState.from_json(json["windowState"])
-                if json.get("windowState", None) is not None
-                else None
-            ),
+            height=int(json["height"])
+            if json.get("height", None) is not None
+            else None,
+            window_state=WindowState.from_json(json["windowState"])
+            if json.get("windowState", None) is not None
+            else None,
         )
 
 
@@ -138,6 +136,7 @@ class PermissionType(enum.Enum):
     VIDEO_CAPTURE_PAN_TILT_ZOOM = "videoCapturePanTiltZoom"
     WAKE_LOCK_SCREEN = "wakeLockScreen"
     WAKE_LOCK_SYSTEM = "wakeLockSystem"
+    WEB_APP_INSTALLATION = "webAppInstallation"
     WINDOW_MANAGEMENT = "windowManagement"
 
     def to_json(self) -> str:
@@ -208,26 +207,18 @@ class PermissionDescriptor:
         return cls(
             name=str(json["name"]),
             sysex=bool(json["sysex"]) if json.get("sysex", None) is not None else None,
-            user_visible_only=(
-                bool(json["userVisibleOnly"])
-                if json.get("userVisibleOnly", None) is not None
-                else None
-            ),
-            allow_without_sanitization=(
-                bool(json["allowWithoutSanitization"])
-                if json.get("allowWithoutSanitization", None) is not None
-                else None
-            ),
-            allow_without_gesture=(
-                bool(json["allowWithoutGesture"])
-                if json.get("allowWithoutGesture", None) is not None
-                else None
-            ),
-            pan_tilt_zoom=(
-                bool(json["panTiltZoom"])
-                if json.get("panTiltZoom", None) is not None
-                else None
-            ),
+            user_visible_only=bool(json["userVisibleOnly"])
+            if json.get("userVisibleOnly", None) is not None
+            else None,
+            allow_without_sanitization=bool(json["allowWithoutSanitization"])
+            if json.get("allowWithoutSanitization", None) is not None
+            else None,
+            allow_without_gesture=bool(json["allowWithoutGesture"])
+            if json.get("allowWithoutGesture", None) is not None
+            else None,
+            pan_tilt_zoom=bool(json["panTiltZoom"])
+            if json.get("panTiltZoom", None) is not None
+            else None,
         )
 
 

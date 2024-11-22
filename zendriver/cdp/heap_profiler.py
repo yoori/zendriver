@@ -6,6 +6,7 @@
 # CDP domain: HeapProfiler (experimental)
 
 from __future__ import annotations
+import enum
 import typing
 from dataclasses import dataclass
 from .util import event_class, T_JSON_DICT
@@ -140,7 +141,6 @@ def add_inspected_heap_object(
 
 
 def collect_garbage() -> typing.Generator[T_JSON_DICT, T_JSON_DICT, None]:
-
     cmd_dict: T_JSON_DICT = {
         "method": "HeapProfiler.collectGarbage",
     }
@@ -148,7 +148,6 @@ def collect_garbage() -> typing.Generator[T_JSON_DICT, T_JSON_DICT, None]:
 
 
 def disable() -> typing.Generator[T_JSON_DICT, T_JSON_DICT, None]:
-
     cmd_dict: T_JSON_DICT = {
         "method": "HeapProfiler.disable",
     }
@@ -156,7 +155,6 @@ def disable() -> typing.Generator[T_JSON_DICT, T_JSON_DICT, None]:
 
 
 def enable() -> typing.Generator[T_JSON_DICT, T_JSON_DICT, None]:
-
     cmd_dict: T_JSON_DICT = {
         "method": "HeapProfiler.enable",
     }
@@ -387,18 +385,15 @@ class ReportHeapSnapshotProgress:
         return cls(
             done=int(json["done"]),
             total=int(json["total"]),
-            finished=(
-                bool(json["finished"])
-                if json.get("finished", None) is not None
-                else None
-            ),
+            finished=bool(json["finished"])
+            if json.get("finished", None) is not None
+            else None,
         )
 
 
 @event_class("HeapProfiler.resetProfiles")
 @dataclass
 class ResetProfiles:
-
     @classmethod
     def from_json(cls, json: T_JSON_DICT) -> ResetProfiles:
         return cls()

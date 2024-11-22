@@ -1,6 +1,6 @@
 [project]
 name = "zendriver"
-version = "0.1.5"
+version = "0.2.0"
 description = "A blazing fast, async-first, undetectable webscraping/web automation framework"
 readme = "README.md"
 authors = [{ name = "Stephan Lensky", email = "oss@slensky.com" }]
@@ -35,12 +35,12 @@ dev-dependencies = [
     "mkdocstrings[python]>=0.26.2",
     "mypy>=1.12.0",
     "pyyaml>=6.0.2",
-    "ruff>=0.7.0",
+    "ruff>=0.7.4",
     "types-pyyaml>=6.0.12.20240917",
     "types-requests>=2.32.0.20241016",
 ]
 
-[tool.ruff]
+[tool.ruff.lint]
 exclude = ["zendriver/cdp"]
 
 [tool.mypy]

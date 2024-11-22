@@ -6,6 +6,7 @@
 # CDP domain: PerformanceTimeline (experimental)
 
 from __future__ import annotations
+import enum
 import typing
 from dataclasses import dataclass
 from .util import event_class, T_JSON_DICT
@@ -55,17 +56,13 @@ class LargestContentfulPaint:
             render_time=network.TimeSinceEpoch.from_json(json["renderTime"]),
             load_time=network.TimeSinceEpoch.from_json(json["loadTime"]),
             size=float(json["size"]),
-            element_id=(
-                str(json["elementId"])
-                if json.get("elementId", None) is not None
-                else None
-            ),
+            element_id=str(json["elementId"])
+            if json.get("elementId", None) is not None
+            else None,
             url=str(json["url"]) if json.get("url", None) is not None else None,
-            node_id=(
-                dom.BackendNodeId.from_json(json["nodeId"])
-                if json.get("nodeId", None) is not None
-                else None
-            ),
+            node_id=dom.BackendNodeId.from_json(json["nodeId"])
+            if json.get("nodeId", None) is not None
+            else None,
         )
 
 
@@ -90,11 +87,9 @@ class LayoutShiftAttribution:
         return cls(
             previous_rect=dom.Rect.from_json(json["previousRect"]),
             current_rect=dom.Rect.from_json(json["currentRect"]),
-            node_id=(
-                dom.BackendNodeId.from_json(json["nodeId"])
-                if json.get("nodeId", None) is not None
-                else None
-            ),
+            node_id=dom.BackendNodeId.from_json(json["nodeId"])
+            if json.get("nodeId", None) is not None
+            else None,
         )
 
 
@@ -174,21 +169,15 @@ class TimelineEvent:
             type_=str(json["type"]),
             name=str(json["name"]),
             time=network.TimeSinceEpoch.from_json(json["time"]),
-            duration=(
-                float(json["duration"])
-                if json.get("duration", None) is not None
-                else None
-            ),
-            lcp_details=(
-                LargestContentfulPaint.from_json(json["lcpDetails"])
-                if json.get("lcpDetails", None) is not None
-                else None
-            ),
-            layout_shift_details=(
-                LayoutShift.from_json(json["layoutShiftDetails"])
-                if json.get("layoutShiftDetails", None) is not None
-                else None
-            ),
+            duration=float(json["duration"])
+            if json.get("duration", None) is not None
+            else None,
+            lcp_details=LargestContentfulPaint.from_json(json["lcpDetails"])
+            if json.get("lcpDetails", None) is not None
+            else None,
+            layout_shift_details=LayoutShift.from_json(json["layoutShiftDetails"])
+            if json.get("layoutShiftDetails", None) is not None
+            else None,
         )
 
 

@@ -9,7 +9,7 @@ from __future__ import annotations
 import enum
 import typing
 from dataclasses import dataclass
-from .util import T_JSON_DICT
+from .util import event_class, T_JSON_DICT
 
 
 @dataclass
@@ -65,16 +65,12 @@ class GPUDevice:
             device_string=str(json["deviceString"]),
             driver_vendor=str(json["driverVendor"]),
             driver_version=str(json["driverVersion"]),
-            sub_sys_id=(
-                float(json["subSysId"])
-                if json.get("subSysId", None) is not None
-                else None
-            ),
-            revision=(
-                float(json["revision"])
-                if json.get("revision", None) is not None
-                else None
-            ),
+            sub_sys_id=float(json["subSysId"])
+            if json.get("subSysId", None) is not None
+            else None,
+            revision=float(json["revision"])
+            if json.get("revision", None) is not None
+            else None,
         )
 
 
@@ -302,16 +298,12 @@ class GPUInfo:
                 ImageDecodeAcceleratorCapability.from_json(i)
                 for i in json["imageDecoding"]
             ],
-            aux_attributes=(
-                dict(json["auxAttributes"])
-                if json.get("auxAttributes", None) is not None
-                else None
-            ),
-            feature_status=(
-                dict(json["featureStatus"])
-                if json.get("featureStatus", None) is not None
-                else None
-            ),
+            aux_attributes=dict(json["auxAttributes"])
+            if json.get("auxAttributes", None) is not None
+            else None,
+            feature_status=dict(json["featureStatus"])
+            if json.get("featureStatus", None) is not None
+            else None,
         )
 
 

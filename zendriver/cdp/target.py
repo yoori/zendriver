@@ -6,6 +6,7 @@
 # CDP domain: Target
 
 from __future__ import annotations
+import enum
 import typing
 from dataclasses import dataclass
 from .util import event_class, T_JSON_DICT
@@ -69,7 +70,7 @@ class TargetInfo:
     browser_context_id: typing.Optional[browser.BrowserContextID] = None
 
     #: Provides additional details for specific target types. For example, for
-    #: the type of "page", this may be set to "portal" or "prerender".
+    #: the type of "page", this may be set to "prerender".
     subtype: typing.Optional[str] = None
 
     def to_json(self) -> T_JSON_DICT:
@@ -99,24 +100,20 @@ class TargetInfo:
             url=str(json["url"]),
             attached=bool(json["attached"]),
             can_access_opener=bool(json["canAccessOpener"]),
-            opener_id=(
-                TargetID.from_json(json["openerId"])
-                if json.get("openerId", None) is not None
-                else None
-            ),
-            opener_frame_id=(
-                page.FrameId.from_json(json["openerFrameId"])
-                if json.get("openerFrameId", None) is not None
-                else None
-            ),
-            browser_context_id=(
-                browser.BrowserContextID.from_json(json["browserContextId"])
-                if json.get("browserContextId", None) is not None
-                else None
-            ),
-            subtype=(
-                str(json["subtype"]) if json.get("subtype", None) is not None else None
-            ),
+            opener_id=TargetID.from_json(json["openerId"])
+            if json.get("openerId", None) is not None
+            else None,
+            opener_frame_id=page.FrameId.from_json(json["openerFrameId"])
+            if json.get("openerFrameId", None) is not None
+            else None,
+            browser_context_id=browser.BrowserContextID.from_json(
+                json["browserContextId"]
+            )
+            if json.get("browserContextId", None) is not None
+            else None,
+            subtype=str(json["subtype"])
+            if json.get("subtype", None) is not None
+            else None,
         )
 
 
@@ -143,9 +140,9 @@ class FilterEntry:
     @classmethod
     def from_json(cls, json: T_JSON_DICT) -> FilterEntry:
         return cls(
-            exclude=(
-                bool(json["exclude"]) if json.get("exclude", None) is not None else None
-            ),
+            exclude=bool(json["exclude"])
+            if json.get("exclude", None) is not None
+            else None,
             type_=str(json["type"]) if json.get("type", None) is not None else None,
         )
 
@@ -647,11 +644,9 @@ class DetachedFromTarget:
     def from_json(cls, json: T_JSON_DICT) -> DetachedFromTarget:
         return cls(
             session_id=SessionID.from_json(json["sessionId"]),
-            target_id=(
-                TargetID.from_json(json["targetId"])
-                if json.get("targetId", None) is not None
-                else None
-            ),
+            target_id=TargetID.from_json(json["targetId"])
+            if json.get("targetId", None) is not None
+            else None,
         )
 
 
@@ -674,11 +669,9 @@ class ReceivedMessageFromTarget:
         return cls(
             session_id=SessionID.from_json(json["sessionId"]),
             message=str(json["message"]),
-            target_id=(
-                TargetID.from_json(json["targetId"])
-                if json.get("targetId", None) is not None
-                else None
-            ),
+            target_id=TargetID.from_json(json["targetId"])
+            if json.get("targetId", None) is not None
+            else None,
         )
 
 

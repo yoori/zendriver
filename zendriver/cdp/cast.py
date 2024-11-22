@@ -6,6 +6,7 @@
 # CDP domain: Cast (experimental)
 
 from __future__ import annotations
+import enum
 import typing
 from dataclasses import dataclass
 from .util import event_class, T_JSON_DICT
@@ -34,9 +35,9 @@ class Sink:
         return cls(
             name=str(json["name"]),
             id_=str(json["id"]),
-            session=(
-                str(json["session"]) if json.get("session", None) is not None else None
-            ),
+            session=str(json["session"])
+            if json.get("session", None) is not None
+            else None,
         )
 
 
