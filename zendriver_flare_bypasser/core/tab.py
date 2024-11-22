@@ -7,7 +7,7 @@ import typing
 import warnings
 from typing import List, Optional, Tuple, Union
 
-import zendriver.core.browser
+import zendriver_flare_bypasser.core.browser
 
 from .. import cdp
 from . import element, util
@@ -116,14 +116,14 @@ class Tab(Connection):
     you can act upon.
     """
 
-    browser: zendriver.core.browser.Browser
+    browser: zendriver_flare_bypasser.core.browser.Browser
     _download_behavior: List[str] = None
 
     def __init__(
         self,
         websocket_url: str,
         target: cdp.target.TargetInfo,
-        browser: Optional["zendriver.Browser"] = None,
+        browser: Optional["zendriver_flare_bypasser.Browser"] = None,
         **kwargs,
     ):
         super().__init__(websocket_url, target, browser, **kwargs)
@@ -218,7 +218,7 @@ class Tab(Connection):
         self,
         selector: str,
         timeout: Union[int, float] = 10,
-    ) -> zendriver.Element:
+    ) -> zendriver_flare_bypasser.Element:
         """
         find single element by css selector.
         can also be used to wait for such element to appear.
@@ -250,7 +250,7 @@ class Tab(Connection):
         self,
         text: str,
         timeout: Union[int, float] = 10,
-    ) -> List[zendriver.Element]:
+    ) -> List[zendriver_flare_bypasser.Element]:
         """
         find multiple elements by text
         can also be used to wait for such element to appear.
@@ -279,7 +279,7 @@ class Tab(Connection):
 
     async def select_all(
         self, selector: str, timeout: Union[int, float] = 10, include_frames=False
-    ) -> List[zendriver.Element]:
+    ) -> List[zendriver_flare_bypasser.Element]:
         """
         find multiple elements by css selector.
         can also be used to wait for such element to appear.
@@ -351,7 +351,7 @@ class Tab(Connection):
         equivalent of javascripts document.querySelectorAll.
         this is considered one of the main methods to use in this package.
 
-        it returns all matching :py:obj:`zendriver.Element` objects.
+        it returns all matching :py:obj:`zendriver_flare_bypasser.Element` objects.
 
         :param selector: css selector. (first time? => https://www.w3schools.com/cssref/css_selectors.php )
         :type selector: str
@@ -1248,7 +1248,7 @@ class Tab(Connection):
         )
         self._download_behavior = ["allow", str(path.resolve())]
 
-    async def get_all_linked_sources(self) -> List["zendriver.Element"]:
+    async def get_all_linked_sources(self) -> List["zendriver_flare_bypasser.Element"]:
         """
         get all elements of tag: link, a, img, scripts meta, video, audio
 

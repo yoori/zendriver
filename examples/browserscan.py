@@ -1,6 +1,6 @@
 import asyncio
 
-import zendriver as zd
+import zendriver_flare_bypasser as zd
 
 
 async def main():

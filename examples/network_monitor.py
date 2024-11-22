@@ -1,11 +1,11 @@
 try:
-    from zendriver import cdp, loop, start
+    from zendriver_flare_bypasser import cdp, loop, start
 except (ModuleNotFoundError, ImportError):
     import os
     import sys
 
     sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-    from zendriver import cdp, loop, start
+    from zendriver_flare_bypasser import cdp, loop, start
 
 
 async def main():

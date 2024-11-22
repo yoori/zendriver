@@ -1,5 +1,5 @@
 [project]
-name = "zendriver"
+name = "zendriver_flare_bypasser"
 version = "0.2.0"
 description = "A blazing fast, async-first, undetectable webscraping/web automation framework"
 readme = "README.md"
@@ -41,10 +41,10 @@ dev-dependencies = [
 ]
 
 [tool.ruff.lint]
-exclude = ["zendriver/cdp"]
+exclude = ["zendriver_flare_bypasser/cdp"]
 
 [tool.mypy]
-exclude = "zendriver/cdp"
+exclude = "zendriver_flare_bypasser/cdp"
 check_untyped_defs = true
 
 [[tool.mypy.overrides]]

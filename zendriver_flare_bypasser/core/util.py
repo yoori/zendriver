@@ -6,7 +6,7 @@ import types
 import typing
 from typing import Callable, List, Optional, Set, Union
 
-import zendriver
+import zendriver_flare_bypasser
 
 from .element import Element
 
@@ -98,7 +98,7 @@ async def create_from_undetected_chromedriver(
     driver,
 ) -> Browser:
     """
-    create a zendriver.Browser instance from a running undetected_chromedriver.Chrome instance.
+    create a zendriver_flare_bypasser.Browser instance from a running undetected_chromedriver.Chrome instance.
     """
     from .config import Config
 
@@ -142,7 +142,7 @@ def filter_recurse_all(
     """
     test each child using predicate(child), and return all children for which predicate(child) == True
 
-    :param doc: the cdp.dom.Node object or :py:class:`zendriver.Element`
+    :param doc: the cdp.dom.Node object or :py:class:`zendriver_flare_bypasser.Element`
     :param predicate: a function which takes a node as first parameter and returns a boolean, where True means include
     :return:
     :rtype:
@@ -166,7 +166,7 @@ def filter_recurse(doc: T, predicate: Callable[[cdp.dom.Node, Element], bool]) -
     """
     test each child using predicate(child), and return the first child of which predicate(child) == True
 
-    :param doc: the cdp.dom.Node object or :py:class:`zendriver.Element`
+    :param doc: the cdp.dom.Node object or :py:class:`zendriver_flare_bypasser.Element`
     :param predicate: a function which takes a node as first parameter and returns a boolean, where True means include
 
     """
@@ -239,7 +239,7 @@ def remove_from_tree(tree: cdp.dom.Node, node: cdp.dom.Node) -> cdp.dom.Node:
     return tree
 
 
-async def html_from_tree(tree: Union[cdp.dom.Node, Element], target: zendriver.Tab):
+async def html_from_tree(tree: Union[cdp.dom.Node, Element], target: zendriver_flare_bypasser.Tab):
     if not hasattr(tree, "children"):
         raise TypeError("object should have a .children attribute")
     out = ""
