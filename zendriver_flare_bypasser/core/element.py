@@ -562,6 +562,92 @@ class Element:
         except:  # noqa
             pass
 
+    async def mouse_down(
+        self,
+        button: str = "left",
+        buttons: typing.Optional[int] = 1,
+        modifiers: typing.Optional[int] = 0,
+    ):
+        """native click (on element) . note: this likely does not work atm, use click() instead
+
+        :param button: str (default = "left")
+        :param buttons: which button (default 1 = left)
+        :param modifiers: *(Optional)* Bit field representing pressed modifier keys.
+                Alt=1, Ctrl=2, Meta/Command=4, Shift=8 (default: 0).
+        :return:
+
+        """
+        try:
+            center = (await self.get_position()).center
+        except AttributeError:
+            return
+        if not center:
+            logger.warning("could not calculate box model for %s", self)
+            return
+
+        logger.debug("mouse down on location %.2f, %.2f" % center)
+
+        await asyncio.gather(
+            self._tab.send(
+                cdp.input_.dispatch_mouse_event(
+                    "mousePressed",
+                    x=center[0],
+                    y=center[1],
+                    modifiers=modifiers,
+                    button=cdp.input_.MouseButton(button),
+                    buttons=buttons,
+                    click_count=1,
+                )
+            ),
+        )
+        try:
+            await self.flash()
+        except:  # noqa
+            pass
+
+    async def mouse_up(
+        self,
+        button: str = "left",
+        buttons: typing.Optional[int] = 1,
+        modifiers: typing.Optional[int] = 0,
+    ):
+        """native mouse release (on element) . note: this likely does not work atm, use click() instead
+
+        :param button: str (default = "left")
+        :param buttons: which button (default 1 = left)
+        :param modifiers: *(Optional)* Bit field representing pressed modifier keys.
+                Alt=1, Ctrl=2, Meta/Command=4, Shift=8 (default: 0).
+        :return:
+
+        """
+        try:
+            center = (await self.get_position()).center
+        except AttributeError:
+            return
+        if not center:
+            logger.warning("could not calculate box model for %s", self)
+            return
+
+        logger.debug("mouse release on location %.2f, %.2f" % center)
+
+        await asyncio.gather(
+            self._tab.send(
+                cdp.input_.dispatch_mouse_event(
+                    "mouseReleased",
+                    x=center[0],
+                    y=center[1],
+                    modifiers=modifiers,
+                    button=cdp.input_.MouseButton(button),
+                    buttons=buttons,
+                    click_count=1,
+                )
+            ),
+        )
+        try:
+            await self.flash()
+        except:  # noqa
+            pass
+
     async def mouse_move(self):
         """moves mouse (not click), to element position. when an element has an
         hover/mouseover effect, this would trigger it"""
