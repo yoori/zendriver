@@ -8,6 +8,7 @@
 from __future__ import annotations
 import enum
 import typing
+import logging
 from dataclasses import dataclass
 from .util import event_class, T_JSON_DICT
 
@@ -15,6 +16,7 @@ from . import page
 from . import runtime
 from deprecated.sphinx import deprecated  # type: ignore
 
+logger = logging.getLogger(__name__)
 
 class NodeId(int):
     """

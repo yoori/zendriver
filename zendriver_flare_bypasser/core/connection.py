@@ -8,6 +8,7 @@ import json
 import logging
 import sys
 import types
+import traceback
 from asyncio import iscoroutine, iscoroutinefunction
 from typing import (
     TYPE_CHECKING,
@@ -436,7 +437,13 @@ class Connection(metaclass=CantTouchThis):
             except ProtocolException as e:
                 e.message += f"\ncommand:{tx.method}\nparams:{tx.params}"
                 raise e
-        except Exception:
+        except websockets.exceptions.ConnectionClosedError:
+            await self.aclose()
+        except Exception as e:
+            logger.error(
+                "Connection send error: " + str(e) + " for message: " +
+                str(cdp_obj) + ": " + traceback.format_exc()
+            )
             await self.aclose()
 
     #
@@ -631,7 +638,7 @@ class Listener:
                     # thanks to zxsleebu for discovering the memory leak
                     # pop to prevent memory leaks
                     tx = self.connection.mapper.pop(message["id"])
-                    logger.debug("got answer for %s (message_id:%d)", tx, message["id"])
+                    logger.debug("got answer for %s (message_id:%d): %s", tx, message["id"], str(message))
 
                     # complete the transaction, which is a Future object
                     # and thus will return to anyone awaiting it.

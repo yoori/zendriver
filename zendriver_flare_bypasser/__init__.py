@@ -6,6 +6,7 @@ from .core._contradict import (
     cdict,
 )
 from .core.browser import Browser
+from .core.inputs import Keyboard, Touchscreen, Mouse
 from .core.config import Config
 from .core.connection import Connection
 from .core.element import Element
@@ -25,4 +26,7 @@ __all__ = [
     "ContraDict",
     "cdict",
     "Connection",
+    "Keyboard",
+    "Touchscreen",
+    "Mouse",
 ]

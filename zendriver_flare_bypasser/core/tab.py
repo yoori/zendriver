@@ -11,6 +11,7 @@ import zendriver_flare_bypasser.core.browser
 
 from .. import cdp
 from . import element, util
+from .inputs import Keyboard, Mouse, Touchscreen
 from .config import PathLike
 from .connection import Connection, ProtocolException
 
@@ -130,6 +131,9 @@ class Tab(Connection):
         self.browser = browser
         self._dom = None
         self._window_id = None
+        self.keyboard = Keyboard(self)
+        self.touchscreen = Touchscreen(self)
+        self.mouse = Mouse(self)
 
     @property
     def inspector_url(self):
