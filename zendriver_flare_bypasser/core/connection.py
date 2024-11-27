@@ -631,7 +631,7 @@ class Listener:
                     # thanks to zxsleebu for discovering the memory leak
                     # pop to prevent memory leaks
                     tx = self.connection.mapper.pop(message["id"])
-                    logger.debug("got answer for %s (message_id:%d)", tx, message["id"])
+                    logger.debug("got answer for %s (message_id:%d): %s", tx, message["id"], str(message))
 
                     # complete the transaction, which is a Future object
                     # and thus will return to anyone awaiting it.
