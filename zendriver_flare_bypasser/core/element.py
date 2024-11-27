@@ -648,7 +648,7 @@ class Element:
         except:  # noqa
             pass
 
-    async def mouse_move(self):
+    async def mouse_move(self, release=True):
         """moves mouse (not click), to element position. when an element has an
         hover/mouseover effect, this would trigger it"""
         try:
@@ -662,10 +662,11 @@ class Element:
         await self._tab.send(
             cdp.input_.dispatch_mouse_event("mouseMoved", x=center[0], y=center[1])
         )
-        await self._tab.sleep(0.05)
-        await self._tab.send(
-            cdp.input_.dispatch_mouse_event("mouseReleased", x=center[0], y=center[1])
-        )
+        if release:
+          await self._tab.sleep(0.05)
+          await self._tab.send(
+              cdp.input_.dispatch_mouse_event("mouseReleased", x=center[0], y=center[1])
+          )
 
     async def mouse_drag(
         self,
