@@ -15,6 +15,7 @@ from . import page
 from . import runtime
 from deprecated.sphinx import deprecated  # type: ignore
 
+logger = logging.getLogger(__name__)
 
 class NodeId(int):
     """
@@ -955,6 +956,7 @@ def get_content_quads(
         "params": params,
     }
     json = yield cmd_dict
+    logger.info("get_content_quads: got json: " + str(json))
     return [Quad.from_json(i) for i in json["quads"]]
 
 
