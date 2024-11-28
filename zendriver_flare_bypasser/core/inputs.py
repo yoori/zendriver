@@ -8,11 +8,11 @@ import warnings
 from typing import List, Union, Optional, Tuple
 from typing import Any, Dict, Optional, TYPE_CHECKING
 
-from nodriver.core.tab import Tab
+from zendriver_flare_bypasser.core.tab import Tab
 if TYPE_CHECKING:
     from typing import Set
 
-import nodriver.core.browser
+import zendriver_flare_bypasser.core.browser
 from . import element
 from . import util
 from .util import merge_dict, key_definitions
