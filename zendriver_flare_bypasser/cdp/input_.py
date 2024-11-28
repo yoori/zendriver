@@ -8,9 +8,11 @@
 from __future__ import annotations
 import enum
 import typing
+import logging
 from dataclasses import dataclass
 from .util import event_class, T_JSON_DICT
 
+logger = logging.getLogger(__name__)
 
 @dataclass
 class TouchPoint:
@@ -443,6 +445,7 @@ def dispatch_mouse_event(
         "method": "Input.dispatchMouseEvent",
         "params": params,
     }
+    logger.info("dispatch_mouse_event: " + str(cmd_dict))
     json = yield cmd_dict
 
 
