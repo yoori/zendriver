@@ -437,7 +437,8 @@ class Connection(metaclass=CantTouchThis):
             except ProtocolException as e:
                 e.message += f"\ncommand:{tx.method}\nparams:{tx.params}"
                 raise e
-        except Exception:
+        except Exception as e:
+            logger.error("send request error: " + str(e))
             await self.aclose()
 
     #
