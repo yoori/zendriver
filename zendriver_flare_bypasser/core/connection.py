@@ -430,7 +430,7 @@ class Connection(metaclass=CantTouchThis):
             self.mapper.update({tx.id: tx})
             if not _is_update:
                 await self._register_handlers()
-            logger.debug("send request (%s): %s", str(tx.message["id"]), str(tx.message))
+            logger.debug("send request (" + str(tx.id) + "): " + str(tx.message))
             await self.websocket.send(tx.message)
             try:
                 return await tx
