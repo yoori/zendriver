@@ -192,7 +192,7 @@ class Mouse:
                 x = x,
                 y = y,
                 modifiers = self.tab.keyboard._modifiers,
-                button = self._button,
+                button = cdp.input_.MouseButton(self._button),
             ))
 
     async def click(self, x: float, y: float, options: dict = None,
@@ -229,7 +229,7 @@ class Mouse:
         self._button = options.get('button', 'left')
         await self.tab.send(cdp.input_.dispatch_mouse_event(
             type_ = 'mousePressed',
-            button = self._button,
+            button = cdp.input_.MouseButton(self._button),
             x = self._x,
             y = self._y,
             modifiers = self.tab.keyboard._modifiers,
@@ -249,7 +249,7 @@ class Mouse:
         self._button = 'none'
         await self.tab.send(cdp.input_.dispatch_mouse_event(
             type_ = 'mouseReleased',
-            button = options.get('button', 'left'),
+            button = cdp.input_.MouseButton(options.get('button', 'left')),
             x = self._x,
             y = self._y,
             modifiers = self.tab.keyboard._modifiers,
