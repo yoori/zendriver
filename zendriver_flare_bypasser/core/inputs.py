@@ -181,8 +181,8 @@ class Mouse:
         options = merge_dict(options, kwargs)
         from_x = self._x
         from_y = self._y
-        self._x = x
-        self._y = y
+        self._x = float(x)
+        self._y = float(y)
         steps = options.get('steps', 1)
         for i in range(1, steps + 1):
             x = round(from_x + (self._x - from_x) * (i / steps))
