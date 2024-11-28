@@ -4,11 +4,8 @@ import asyncio
 import logging
 import types
 import typing
-<<<<<<< HEAD:zendriver_flare_bypasser/core/util.py
 from typing import Callable, List, Optional, Set, Union
-=======
 from typing import Dict, Optional, List, Set, Union, Callable
->>>>>>> 0e34ece (Updated code):nodriver/core/util.py
 
 import zendriver_flare_bypasser
 

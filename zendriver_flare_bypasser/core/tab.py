@@ -10,7 +10,8 @@ from typing import List, Optional, Tuple, Union
 import zendriver_flare_bypasser.core.browser
 
 from .. import cdp
-from . import element, util, Keyboard, Mouse, Touchscreen
+from . import element, util
+from .inputs import Keyboard, Mouse, Touchscreen
 from .config import PathLike
 from .connection import Connection, ProtocolException
 
