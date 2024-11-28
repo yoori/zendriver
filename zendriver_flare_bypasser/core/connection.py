@@ -8,6 +8,7 @@ import json
 import logging
 import sys
 import types
+import traceback
 from asyncio import iscoroutine, iscoroutinefunction
 from typing import (
     TYPE_CHECKING,
@@ -437,8 +438,13 @@ class Connection(metaclass=CantTouchThis):
             except ProtocolException as e:
                 e.message += f"\ncommand:{tx.method}\nparams:{tx.params}"
                 raise e
+        except websockets.exceptions.ConnectionClosedError:
+            await self.aclose()
         except Exception as e:
-            logger.error("send request error: " + str(e))
+            logger.error(
+                "Connection send error: " + str(e) + " for message: " +
+                str(cdp_obj) + ": " + traceback.format_exc()
+            )
             await self.aclose()
 
     #
