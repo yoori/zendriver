@@ -431,6 +431,7 @@ class Connection(metaclass=CantTouchThis):
             self.mapper.update({tx.id: tx})
             if not _is_update:
                 await self._register_handlers()
+            logger.debug("send message %s (message_id:%d, conn.id:%d): %s", tx, tx.id, id(self), str(cdp_obj))
             await self.websocket.send(tx.message)
             try:
                 return await tx
@@ -599,106 +600,111 @@ class Listener:
         return True
 
     async def listener_loop(self):
-        while True:
-            try:
-                msg = await asyncio.wait_for(
-                    self.connection.websocket.recv(), self.time_before_considered_idle
-                )
-            except asyncio.TimeoutError:
-                self.idle.set()
-                # breathe
-                # await asyncio.sleep(self.time_before_considered_idle / 10)
-                continue
-            except (websockets.exceptions.ConnectionClosedError,) as e:
-                logger.debug(
-                    "connection listener exception while reading websocket:\n%s", e
-                )
-                break
-            except (Exception,) as e:
-                # we don't expect here other exceptions, need to debug if it will appear.
-                logger.exception(
-                    "connection listener exception while reading websocket"
-                )
-                break
-
-            if not self.running:
-                # if we have been cancelled or otherwise stopped running
-                # break this loop
-                break
-
-            # since we are at this point, we are not "idle" anymore.
-            self.idle.clear()
-
-            message = json.loads(msg)
-            if "id" in message:
-                # response to our command
-                if message["id"] in self.connection.mapper:
-                    # get the corresponding Transaction
-
-                    # thanks to zxsleebu for discovering the memory leak
-                    # pop to prevent memory leaks
-                    tx = self.connection.mapper.pop(message["id"])
-                    logger.debug("got answer for %s (message_id:%d): %s", tx, message["id"], str(message))
-
-                    # complete the transaction, which is a Future object
-                    # and thus will return to anyone awaiting it.
-                    tx(**message)
-                else:
-                    if message["id"] == -2:
-                        tx = self.connection.mapper.get(-2)
-                        if tx:
-                            tx(**message)
-                        continue
-            else:
-                # probably an event
+        try:
+            while True:
                 try:
-                    event = cdp.util.parse_json_event(message)
-                    event_tx = EventTransaction(event)
-                    event_tx.id = next(self.connection._cdp_id_generator)
-                    self.connection.mapper[event_tx.id] = event_tx
-                except Exception as e:
-                    logger.info(
-                        "%s: %s  during parsing of json from event : %s"
-                        % (type(e).__name__, e.args, message),
-                        exc_info=True,
+                    msg = await asyncio.wait_for(
+                        self.connection.websocket.recv(), self.time_before_considered_idle
                     )
+                except asyncio.TimeoutError:
+                    logger.info("connection listener asyncio.TimeoutError")
+                    self.idle.set()
+                    # breathe
+                    # await asyncio.sleep(self.time_before_considered_idle / 10)
                     continue
-                except KeyError as e:
-                    logger.info("some lousy KeyError %s" % e, exc_info=True)
-                    continue
-                try:
-                    if type(event) in self.connection.handlers:
-                        callbacks = self.connection.handlers[type(event)]
-                    else:
-                        continue
-                    if not len(callbacks):
-                        continue
-                    for callback in callbacks:
-                        try:
-                            if iscoroutinefunction(callback) or iscoroutine(callback):
-                                try:
-                                    await callback(event, self.connection)
-                                except TypeError:
-                                    await callback(event)
-                            else:
-                                try:
-                                    callback(event, self.connection)
-                                except TypeError:
-                                    callback(event)
-                        except Exception as e:
-                            logger.warning(
-                                "exception in callback %s for event %s => %s",
-                                callback,
-                                event.__class__.__name__,
-                                e,
-                                exc_info=True,
-                            )
-                            raise
-                except asyncio.CancelledError:
+                except (websockets.exceptions.ConnectionClosedError,) as e:
+                    logger.debug(
+                        "connection listener exception while reading websocket:\n%s", e
+                    )
                     break
-                except Exception:
-                    raise
-                continue
+                except (Exception,) as e:
+                    # we don't expect here other exceptions, need to debug if it will appear.
+                    logger.exception(
+                        "connection listener exception while reading websocket"
+                    )
+                    break
+
+                if not self.running:
+                    # if we have been cancelled or otherwise stopped running
+                    # break this loop
+                    break
+
+                # since we are at this point, we are not "idle" anymore.
+                self.idle.clear()
+
+                message = json.loads(msg)
+                logger.debug("got some message: %s", str(message))
+                if "id" in message:
+                    # response to our command
+                    if message["id"] in self.connection.mapper:
+                        # get the corresponding Transaction
+
+                        # thanks to zxsleebu for discovering the memory leak
+                        # pop to prevent memory leaks
+                        tx = self.connection.mapper.pop(message["id"])
+                        logger.debug("got answer for %s (message_id:%d): %s", tx, message["id"], str(message))
+
+                        # complete the transaction, which is a Future object
+                        # and thus will return to anyone awaiting it.
+                        tx(**message)
+                    else:
+                        if message["id"] == -2:
+                            tx = self.connection.mapper.get(-2)
+                            if tx:
+                                tx(**message)
+                            continue
+                else:
+                    # probably an event
+                    try:
+                        event = cdp.util.parse_json_event(message)
+                        event_tx = EventTransaction(event)
+                        event_tx.id = next(self.connection._cdp_id_generator)
+                        self.connection.mapper[event_tx.id] = event_tx
+                    except Exception as e:
+                        logger.info(
+                            "%s: %s  during parsing of json from event : %s"
+                            % (type(e).__name__, e.args, message),
+                            exc_info=True,
+                        )
+                        continue
+                    except KeyError as e:
+                        logger.info("some lousy KeyError %s" % e, exc_info=True)
+                        continue
+                    try:
+                        if type(event) in self.connection.handlers:
+                            callbacks = self.connection.handlers[type(event)]
+                        else:
+                            continue
+                        if not len(callbacks):
+                            continue
+                        for callback in callbacks:
+                            try:
+                                if iscoroutinefunction(callback) or iscoroutine(callback):
+                                    try:
+                                        await callback(event, self.connection)
+                                    except TypeError:
+                                        await callback(event)
+                                else:
+                                    try:
+                                        callback(event, self.connection)
+                                    except TypeError:
+                                        callback(event)
+                            except Exception as e:
+                                logger.warning(
+                                    "exception in callback %s for event %s => %s",
+                                    callback,
+                                    event.__class__.__name__,
+                                    e,
+                                    exc_info=True,
+                                )
+                                raise
+                    except asyncio.CancelledError:
+                        break
+                    except Exception:
+                        raise
+                    continue
+        finally:
+            logger.debug("from listener loop")
 
     def __repr__(self):
         s_idle = "[idle]" if self.idle.is_set() else "[busy]"
