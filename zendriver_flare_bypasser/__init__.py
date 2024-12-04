@@ -12,6 +12,7 @@ from .core.connection import Connection
 from .core.element import Element
 from .core.tab import Tab
 from .core.util import loop, start
+from .cdp.network import CookieParam
 
 __all__ = [
     "__version__",
@@ -29,4 +30,5 @@ __all__ = [
     "Keyboard",
     "Touchscreen",
     "Mouse",
+    "CookieParam"
 ]
