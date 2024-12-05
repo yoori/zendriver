@@ -585,8 +585,10 @@ class Browser:
             logger.debug("killed browser process")
 
         await self._process.wait()
+        ret_process = self._process
         self._process = None
         self._process_pid = None
+        return ret_process
 
     async def _cleanup_temporary_profile(self) -> None:
         if not self.config or self.config.uses_custom_data_dir:
