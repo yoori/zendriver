@@ -438,9 +438,13 @@ class Connection(metaclass=CantTouchThis):
             except ProtocolException as e:
                 e.message += f"\ncommand:{tx.method}\nparams:{tx.params}"
                 raise e
-        except websockets.exceptions.ConnectionClosedError:
+        except ProtocolException:
+            # Operation failed - don't close connection and allow to process problem in app
+            raise
+        except websockets.exceptions.ConnectionClosed:
             await self.aclose()
         except Exception as e:
+            # Unexpected exception
             logger.error(
                 "Connection send error: " + str(e) + " for message: " +
                 str(cdp_obj) + ": " + traceback.format_exc()
