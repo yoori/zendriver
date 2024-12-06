@@ -607,12 +607,12 @@ class Listener:
                         self.connection.websocket.recv(), self.time_before_considered_idle
                     )
                 except asyncio.TimeoutError:
-                    logger.info("connection listener asyncio.TimeoutError")
+                    logger.debug("connection listener asyncio.TimeoutError")
                     self.idle.set()
                     # breathe
                     # await asyncio.sleep(self.time_before_considered_idle / 10)
                     continue
-                except (websockets.exceptions.ConnectionClosedError,) as e:
+                except (websockets.exceptions.ConnectionClosed,) as e:
                     logger.debug(
                         "connection listener exception while reading websocket:\n%s", e
                     )
