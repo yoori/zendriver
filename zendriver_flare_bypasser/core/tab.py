@@ -905,7 +905,7 @@ class Tab(Connection):
         )
 
     async def get_content_snapshot(self):
-        return await self.send(cdp.page.capture_snapshot())
+        return await self.send(cdp.dom_snapshot.capture_snapshot([]))
 
     async def maximize(self):
         """
