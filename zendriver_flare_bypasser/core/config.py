@@ -39,6 +39,7 @@ class Config:
         host: str = AUTO,
         port: int = AUTO,
         expert: bool = AUTO,
+        default_browser_args: Optional[List[str]] = AUTO,
         **kwargs: dict,
     ):
         """
@@ -107,25 +108,28 @@ class Config:
         # other keyword args will be accessible by attribute
         self.__dict__.update(kwargs)
         super().__init__()
-        self._default_browser_args = [
-            "--remote-allow-origins=*",
-            "--no-first-run",
-            "--no-service-autorun",
-            "--no-default-browser-check",
-            "--homepage=about:blank",
-            "--no-pings",
-            "--password-store=basic",
-            "--disable-infobars",
-            "--disable-breakpad",
-            "--disable-component-update",
-            "--disable-backgrounding-occluded-windows",
-            "--disable-renderer-backgrounding",
-            "--disable-background-networking",
-            "--disable-dev-shm-usage",
-            "--disable-features=IsolateOrigins,site-per-process",
-            "--disable-session-crashed-bubble",
-            "--disable-search-engine-choice-screen",
-        ]
+        if default_browser_args:
+          self._default_browser_args = default_browser_args
+        else:
+          self._default_browser_args = [
+              "--remote-allow-origins=*",
+              "--no-first-run",
+              "--no-service-autorun",
+              "--no-default-browser-check",
+              "--homepage=about:blank",
+              "--no-pings",
+              "--password-store=basic",
+              "--disable-infobars",
+              "--disable-breakpad",
+              "--disable-component-update",
+              "--disable-backgrounding-occluded-windows",
+              "--disable-renderer-backgrounding",
+              "--disable-background-networking",
+              "--disable-dev-shm-usage",
+              "--disable-features=IsolateOrigins,site-per-process",
+              "--disable-session-crashed-bubble",
+              "--disable-search-engine-choice-screen",
+          ]
 
     @property
     def browser_args(self):
