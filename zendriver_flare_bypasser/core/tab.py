@@ -904,6 +904,9 @@ class Tab(Connection):
             cdp.dom.get_outer_html(backend_node_id=doc.backend_node_id)
         )
 
+    async def get_content_snapshot(self):
+        return await self.send(cdp.page.capture_snapshot())
+
     async def maximize(self):
         """
         maximize page/tab/window
