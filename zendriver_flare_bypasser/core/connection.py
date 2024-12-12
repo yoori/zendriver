@@ -125,16 +125,21 @@ class Transaction(asyncio.Future):
             ", future.cancelled = " + str(self.cancelled()) +
             ": " +
             str(response))
-        if "error" in response:
-            # set exception and bail out
-            return self.set_exception(ProtocolException(response["error"]))
         try:
-            # try to parse the result according to the py cdp docs.
-            self.__cdp_obj__.send(response["result"])
-        except StopIteration as e:
-            # exception value holds the parsed response
-            return self.set_result(e.value)
-        raise ProtocolException("could not parse the cdp response:\n%s" % response)
+          if "error" in response:
+              # set exception and bail out
+              return self.set_exception(ProtocolException(response["error"]))
+          try:
+              # try to parse the result according to the py cdp docs.
+              self.__cdp_obj__.send(response["result"])
+          except StopIteration as e:
+              # exception value holds the parsed response
+              return self.set_result(e.value)
+          raise ProtocolException("could not parse the cdp response:\n%s" % response)
+        except asyncio.exceptions.InvalidStateError as e:
+          # future can be canceled by caller - ignore this case
+          if not self.cancelled():
+            raise e from e
 
     def __repr__(self):
         success = False if (self.done() and self.has_exception) else True
