@@ -709,7 +709,7 @@ class Listener:
                         raise
                     continue
         except Exception as e:
-            logger.exception(e)
+            logger.exception("listener loop error")
         finally:
             logger.debug("from listener loop")
 
