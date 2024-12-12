@@ -118,6 +118,7 @@ class Transaction(asyncio.Future):
         :return:
         """
 
+        logger.info("CALL FOR FUTURE (" + str(id(self)) + "): " + str(response))
         if "error" in response:
             # set exception and bail out
             return self.set_exception(ProtocolException(response["error"]))
