@@ -606,8 +606,10 @@ class Listener:
         return True
 
     async def listener_loop(self):
+        cur_future = None
         try:
             while True:
+                cur_future = None
                 try:
                     msg = await asyncio.wait_for(
                         self.connection.websocket.recv(), self.time_before_considered_idle
@@ -652,11 +654,13 @@ class Listener:
 
                         # complete the transaction, which is a Future object
                         # and thus will return to anyone awaiting it.
+                        cur_future = tx
                         tx(**message)
                     else:
                         if message["id"] == -2:
                             tx = self.connection.mapper.get(-2)
                             if tx:
+                                cur_future = tx
                                 tx(**message)
                             continue
                 else:
@@ -710,7 +714,7 @@ class Listener:
                         raise
                     continue
         except Exception as e:
-            logger.exception("listener loop error")
+            logger.exception("listener loop error on future (" + str(id(cur_future) if cur_future else 0) + ")")
         finally:
             logger.debug("from listener loop")
 
