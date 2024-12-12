@@ -95,6 +95,7 @@ class Transaction(asyncio.Future):
         if params:
             params = params.pop()
         self.params = params
+        logger.info("INIT FUTURE (" + str(id(self)) + "): " + str(params))
 
     @property
     def message(self):
