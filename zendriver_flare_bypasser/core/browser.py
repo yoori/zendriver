@@ -268,7 +268,10 @@ class Browser:
                 filter(lambda item: item.type_ == "page", self.targets)
             )
             # use the tab to navigate to new url
-            frame_id, loader_id, *_ = await connection.send(cdp.page.navigate(url))
+            res = await connection.send(cdp.page.navigate(url))
+            if res is None:
+              raise ValueError("can not open page: " + url)
+            frame_id, loader_id, *_ = res
             # update the frame_id on the tab
             connection.frame_id = frame_id
             connection.browser = self
