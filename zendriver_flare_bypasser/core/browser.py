@@ -367,11 +367,16 @@ class Browser:
 
         if not self.info:
             stderr = None
-            try :
-                 _, stderr_bytes = await self._process.communicate()
-                 stderr = stderr_bytes.decode()[:1000]
-            except Exception :
-                pass
+            if self._process:
+                # Kill process before communicate (if it is alive), otherwise communicate will be blocked
+                await self._stop_process()
+                try :
+                     _, stderr_bytes = await self._process.communicate()
+                     stderr = stderr_bytes.decode()[:1000]
+                except Exception :
+                    pass
+                self._process = None
+                self._process_pid = None
             raise Exception(
                 (
                     """
@@ -575,7 +580,17 @@ class Browser:
         await self.connection.aclose()
         logger.debug("closed the connection")
 
-        self._process.terminate()
+        await self._stop_process()
+        ret_process = self._process
+        self._process = None
+        self._process_pid = None
+        return ret_process
+
+    async def _stop_process(self):
+        try:
+            self._process.terminate()
+        except ProcessLookupError:
+            pass
         logger.debug("gracefully stopping browser process")
         # wait 3 seconds for the browser to stop
         for _ in range(12):
@@ -588,10 +603,6 @@ class Browser:
             logger.debug("killed browser process")
 
         await self._process.wait()
-        ret_process = self._process
-        self._process = None
-        self._process_pid = None
-        return ret_process
 
     async def _cleanup_temporary_profile(self) -> None:
         if not self.config or self.config.uses_custom_data_dir:
