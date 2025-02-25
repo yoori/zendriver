@@ -111,14 +111,18 @@ class Config:
             "--no-first-run",
             "--no-default-browser-check",
             "--disable-infobars",
-            "--disable-breakpad",
-            "--disable-component-update",
-            "--disable-backgrounding-occluded-windows",
-            "--disable-renderer-backgrounding",
-            "--disable-background-networking",
-            "--disable-dev-shm-usage",
+            #"--disable-breakpad",
+            #"--disable-component-update",
+            #"--disable-backgrounding-occluded-windows",
+            #"--disable-renderer-backgrounding",
+            #"--disable-background-networking",
+            #"--disable-dev-shm-usage",
             #"--disable-features=IsolateOrigins,site-per-process",
-            "--disable-search-engine-choice-screen",
+            #"--disable-search-engine-choice-screen",
+
+            "--disable-popup-blocking",
+            "--disable-suggestions-ui",
+            "--hide-crash-restore-bubble",
         ]
 
     @property
@@ -181,7 +185,7 @@ class Config:
         if not user_data_found:
             args += ["--user-data-dir=%s" % self.user_data_dir]
         #args += ["--disable-features=IsolateOrigins,site-per-process"]
-        args += ["--disable-session-crashed-bubble"]
+        #args += ["--disable-session-crashed-bubble"]
         if self.expert:
             args += ["--disable-web-security", "--disable-site-isolation-trials"]
         if self._browser_args:
