@@ -392,7 +392,10 @@ class Tab(Connection):
                     )
                     return await self.query_selector_all(selector, _node)
             else:
-                await self.send(cdp.dom.disable())
+                try:
+                    await self.send(cdp.dom.disable())
+                except ProtocolException:  # < Skip errors like "DOM agent hasn't been enabled".
+                    pass
                 raise
         if not node_ids:
             return []
