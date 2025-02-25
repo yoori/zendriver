@@ -117,7 +117,7 @@ class Config:
             "--disable-renderer-backgrounding",
             "--disable-background-networking",
             "--disable-dev-shm-usage",
-            "--disable-features=IsolateOrigins,site-per-process",
+            #"--disable-features=IsolateOrigins,site-per-process",
             "--disable-search-engine-choice-screen",
         ]
 
@@ -173,8 +173,14 @@ class Config:
         # is probably already taken
         args = self._default_browser_args.copy()
 
-        args += ["--user-data-dir=%s" % self.user_data_dir]
-        args += ["--disable-features=IsolateOrigins,site-per-process"]
+        user_data_found = False
+        for a in args:
+            if a.startswith("--user-data-dir=") or a.startswith("-user-data-dir="):
+                user_data_found = True
+                break
+        if not user_data_found:
+            args += ["--user-data-dir=%s" % self.user_data_dir]
+        #args += ["--disable-features=IsolateOrigins,site-per-process"]
         args += ["--disable-session-crashed-bubble"]
         if self.expert:
             args += ["--disable-web-security", "--disable-site-isolation-trials"]
