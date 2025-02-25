@@ -108,13 +108,8 @@ class Config:
         self.__dict__.update(kwargs)
         super().__init__()
         self._default_browser_args = [
-            "--remote-allow-origins=*",
             "--no-first-run",
-            "--no-service-autorun",
             "--no-default-browser-check",
-            "--homepage=about:blank",
-            "--no-pings",
-            "--password-store=basic",
             "--disable-infobars",
             "--disable-breakpad",
             "--disable-component-update",
@@ -123,7 +118,6 @@ class Config:
             "--disable-background-networking",
             "--disable-dev-shm-usage",
             "--disable-features=IsolateOrigins,site-per-process",
-            "--disable-session-crashed-bubble",
             "--disable-search-engine-choice-screen",
         ]
 
